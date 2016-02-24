@@ -1,0 +1,881 @@
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 1
+kbd101ec.asm
+
+
+
+      1					 .386p
+      2	00000000			 model flat
+      3					 ideal
+      4
+      5					 extrn DosClose:near
+      6					 extrn DosExit:near
+      7					 extrn DosOpen:near
+      8					 extrn DosWrite:near
+      9
+     10	00000000			 stack 8192
+     11
+     12	00002000			 dataseg
+     13	00000000  6B 62	64 31 30 31 65+	 szOutput db 'kbd101ec.dcp'
+     14		  63 2E	64 63 70
+     15	0000000C  00000000		 fhOutput dd 0
+     16
+     17	00000010			 udataseg
+     18	00000000  ????????		 ActionTaken dd	?
+     19	00000004  ????????		 BytesDone dd ?
+     20
+     21	00000008			 codeseg
+     22	00000000			 proc MainRoutine c near
+     23					 arg @@Mod,@@Nul,@@Env,@@Arg
+     24					 ; open	default	code page file
+1    25	00000000  C8 0000 00			 ENTERD	 00000h,0
+1    26					   call	DosOpen	c,offset(szOutput),offset(fhOutput),offset(ActionTaken),0,0,012h,0191h,0
+2    27	00000004  6A 00				 PUSH	 0
+2    28	00000006  68 00000191			 PUSH	 0191H
+2    29	0000000B  6A 12				 PUSH	 012H
+2    30	0000000D  6A 00				 PUSH	 0
+2    31	0000000F  6A 00				 PUSH	 0
+2    32	00000011  68 00000000r			 PUSH	 OFFSET(ACTIONTAKEN)
+2    33	00000016  68 0000000Cr			 PUSH	 OFFSET(FHOUTPUT)
+2    34	0000001B  68 00000000r			 PUSH	 OFFSET(SZOUTPUT)
+2    35	00000020  E8 00000000e			 CALL	 DOSOPEN
+2    36	00000025  83 C4	20			 ADD	 ESP,00020h
+     37	00000028  85 C0			   test	eax,eax	; return code
+     38	0000002A  75 2F			   jnz ReportResult ; error
+     39					 ; write default code page file
+     40					   call	DosWrite c,[fhOutput],offset(dcpStart),dcpTotal,offset(BytesDone)
+1    41	0000002C  68 00000004r			 PUSH	 OFFSET(BYTESDONE)
+1    42	00000031  68 00001400			 PUSH	 DCPTOTAL
+1    43	00000036  68 00000010r			 PUSH	 OFFSET(DCPSTART)
+1    44	0000003B  FF 35	0000000Cr		 PUSH	 [FHOUTPUT]
+1    45	00000041  E8 00000000e			 CALL	 DOSWRITE
+1    46	00000046  83 C4	10			 ADD	 ESP,00010h
+     47					 ; close default code page file
+     48	00000049  8B D8			   mov ebx,eax ; return	code
+     49					   call	DosClose c,[fhOutput]
+1    50	0000004B  FF 35	0000000Cr		 PUSH	 [FHOUTPUT]
+1    51	00000051  E8 00000000e			 CALL	 DOSCLOSE
+1    52	00000056  83 C4	04			 ADD	 ESP,00004h
+     53	00000059  8B C3			   mov eax,ebx ; return	code
+     54	0000005B			 label ReportResult near
+     55					 ; return result and exit
+     56					   call	DosExit	c,1,eax
+1    57	0000005B  50				 PUSH	 EAX
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 2
+kbd101ec.asm
+
+
+
+1    58	0000005C  6A 01				 PUSH	 1
+1    59	0000005E  E8 00000000e			 CALL	 DOSEXIT
+1    60	00000063  83 C4	08			 ADD	 ESP,00008h
+     61	00000066			 endp MainRoutine
+     62
+     63	00000066			 struc entry
+     64					 ; index table entry
+     65	00000000  01*(????)		 sf dw ? ; size/linkage	flags
+     66	00000002  01*(????)		 cc dw ? ; country/language code
+     67	00000004  01*(31 30 31 20)	 cs db '101 ' ;	country	suffix
+     68	00000008  01*(01*(0000))	 w1 dw 1 dup(0)	; reserved
+     69	0000000A  01*(????)		 cp dw ? ; code	page number
+     70	0000000C  01*(0001)		 kt dw 1 ; enhanced keyboard
+     71	0000000E  01*(????????)		 ho dd ? ; header offset
+     72	00000012			 ends entry
+     73
+     74	00000066			 dataseg
+     75	00000010  00000028		 dcpStart dd dcpCount-dcpStart
+     76	00000014  40 23	57 2E 4D 2E 42+	 vendor	db '@#W.M.Brul:0.20160224#@kbd101ec.dcp',0
+     77		  72 75	6C 3A 30 2E 32+
+     78		  30 31	36 30 32 32 34+
+     79		  23 40	6B 62 64 31 30+
+     80		  31 65	63 2E 64 63 70+
+     81		  00
+     82	00000038  0004			 dcpCount dw (dcpEmpty-Entry1)/18 ; index entries
+     83	0000003A  0012 4252 32 37 34  +	 Entry1	entry {sf=12h,cc='BR',cs='274',cp=437,ho=Table1-dcpStart}
+     84		  20 01*(0000) 01B5   +
+     85		  0001 00000074
+     86	0000004C  0000 4252 32 37 34  +	 Entry2	entry {sf=00h,cc='BR',cs='274',cp=850,ho=Table2-dcpStart}
+     87		  20 01*(0000) 0352   +
+     88		  0001 00000557
+     89	0000005E  0001 5553 31 30 33  +	 Entry3	entry {sf=01h,cc='US',cs='103',cp=437,ho=Table3-dcpStart}
+     90		  20 01*(0000) 01B5   +
+     91		  0001 00000A3A
+     92	00000070  0001 5553 31 30 33  +	 Entry4	entry {sf=01h,cc='US',cs='103',cp=850,ho=Table4-dcpStart}
+     93		  20 01*(0000) 0352   +
+     94		  0001 00000F1D
+     95	00000082  0000			 dcpEmpty dw 0 ; end of	index
+     96
+     97	00000084			 struc header
+     98					 ; xlate table header
+     99	00000000  01*(????)		 cp dw ? ; code	page number
+    100	00000002  01*(????????)		 tf dd ? ; xlate table flags
+    101	00000006  01*(00000001)		 kt dd 1 ; enhanced keyboard
+    102	0000000A  01*(04E3)		 ts dw 40+173*7	; xlate	table size
+    103	0000000C  01*(007F)		 ec dw 127 ; xlate table entry count
+    104	0000000E  01*(0007)		 ew dw 7 ; xlate table entry width
+    105	00000010  01*(????)		 cc dw ? ; country/language code
+    106	00000012  01*(0001)		 tt dw 1 ; xlate table type OS/2
+    107	00000014  01*(31 30 31 20)	 cs db '101 ' ;	country	suffix
+    108	00000018  01*(08*(0000))	 w8 dw 8 dup(0)	; reserved
+    109	00000028			 ends header
+    110
+    111	00000084			 dataseg
+    112					 ; default br274 table for codepage 437
+    113	00000084  01B5 00000050	      +	 Table1	header {cp=437,cc='BR',cs='274',tf=50h}
+    114		  00000001 04E3	007F  +
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 3
+kbd101ec.asm
+
+
+
+    115		  0007 4252 0001 32 37+
+    116		  34 20	08*(0000)
+    117					 include 'kbd274br.inc'
+1   118	000000AC  08 00	1B 1B 00 00 00	   db 08h,00h,1Bh,1Bh,00h,00h,00h ; ScanCode:01h <escape>
+1   119	000000B3  04 00	31 21 C0 00 00	   db 04h,00h,'1','!','¿',00h,00h ; ScanCode:02h <1,!,¿>
+1   120	000000BA  04 00	32 40 C1 00 00	   db 04h,00h,'2','@','¡',00h,00h ; ScanCode:03h <2,@,¡>
+1   121	000000C1  04 00	33 23 D9 00 00	   db 04h,00h,'3','#','Ÿ',00h,00h ; ScanCode:04h <3,#,Ÿ>
+1   122	000000C8  04 00	34 24 C3 00 00	   db 04h,00h,'4','$','√',00h,00h ; ScanCode:05h <4,$,√>
+1   123	000000CF  04 00	35 25 C5 00 00	   db 04h,00h,'5','%','≈',00h,00h ; ScanCode:06h <5,%,≈>
+1   124	000000D6  0B 00	36 04 B4 00 00	   db 0Bh,00h,'6',04h,'¥',00h,00h ; ScanCode:07h <6,^,¥>
+1   125	000000DD  04 00	37 26 DA 00 00	   db 04h,00h,'7','&','⁄',00h,00h ; ScanCode:08h <7,&,⁄>
+1   126	000000E4  04 00	38 2A C2 00 00	   db 04h,00h,'8','*','¬',00h,00h ; ScanCode:09h <8,*,¬>
+1   127	000000EB  04 00	39 28 BF 00 00	   db 04h,00h,'9','(','ø',00h,00h ; ScanCode:0Ah <9,(,ø>
+1   128	000000F2  04 00	30 29 FE 00 00	   db 04h,00h,'0',')','˛',00h,00h ; ScanCode:0Bh <0,),˛>
+1   129	000000F9  04 00	2D 5F C4 00 00	   db 04h,00h,'-','_','ƒ',00h,00h ; ScanCode:0Ch <-,_,ƒ>
+1   130	00000100  04 00	3D 2B B3 00 00	   db 04h,00h,'=','+','≥',00h,00h ; ScanCode:0Dh <=,+,≥>
+1   131	00000107  08 00	08 7F 00 00 00	   db 08h,00h,08h,7Fh,00h,00h,00h ; ScanCode:0Eh <backspace>
+1   132	0000010E  04 00	09 00 00 00 00	   db 04h,00h,09h,00h,00h,00h,00h ; ScanCode:0Fh <tab>
+1   133	00000115  01 00	71 51 00 00 00	   db 01h,00h,'q','Q',00h,00h,00h ; ScanCode:10h <q,Q>
+1   134	0000011C  01 00	77 57 00 00 00	   db 01h,00h,'w','W',00h,00h,00h ; ScanCode:11h <w,W
+1   135	00000123  01 1E	65 45 D5 00 00	   db 01h,1Eh,'e','E','’',00h,00h ; ScanCode:12h <e,E,’>
+1   136	0000012A  01 00	72 52 00 00 00	   db 01h,00h,'r','R',00h,00h,00h ; ScanCode:13h <r,R>
+1   137	00000131  01 00	74 54 00 00 00	   db 01h,00h,'t','T',00h,00h,00h ; ScanCode:14h <t,T>
+1   138	00000138  01 0C	79 59 00 00 00	   db 01h,0Ch,'y','Y',00h,00h,00h ; ScanCode:15h <y,Y>
+1   139	0000013F  01 1E	75 55 00 00 00	   db 01h,1Eh,'u','U',00h,00h,00h ; ScanCode:16h <u,U>
+1   140	00000146  01 1E	69 49 00 00 00	   db 01h,1Eh,'i','I',00h,00h,00h ; ScanCode:17h <i,I>
+1   141	0000014D  01 3E	6F 4F 00 00 00	   db 01h,3Eh,'o','O',00h,00h,00h ; ScanCode:18h <o,O>
+1   142	00000154  01 00	70 50 00 00 00	   db 01h,00h,'p','P',00h,00h,00h ; ScanCode:19h <p,P>
+1   143	0000015B  04 00	5B 7B 00 00 00	   db 04h,00h,'[','{',00h,00h,00h ; ScanCode:1Ah <[,{>
+1   144	00000162  04 00	5D 7D 00 00 00	   db 04h,00h,']','}',00h,00h,00h ; ScanCode:1Bh <],}>
+1   145	00000169  08 00	0D 0A 00 00 00	   db 08h,00h,0Dh,0Ah,00h,00h,00h ; ScanCode:1Ch <enter>
+1   146	00000170  0C 00	04 01 04 00 00	   db 0Ch,00h,04h,01h,04h,00h,00h ; ScanCode:1Dh <ctrl-left>
+1   147	00000177  01 3E	61 41 00 00 00	   db 01h,3Eh,'a','A',00h,00h,00h ; ScanCode:1Eh <a,A>
+1   148	0000017E  01 00	73 53 00 00 00	   db 01h,00h,'s','S',00h,00h,00h ; ScanCode:1Fh <s,S>
+1   149	00000185  01 00	64 44 00 00 00	   db 01h,00h,'d','D',00h,00h,00h ; ScanCode:20h <d,D>
+1   150	0000018C  01 00	66 46 00 00 00	   db 01h,00h,'f','F',00h,00h,00h ; ScanCode:21h <f,F>
+1   151	00000193  01 00	67 47 00 00 00	   db 01h,00h,'g','G',00h,00h,00h ; ScanCode:22h <g,G>
+1   152	0000019A  01 00	68 48 00 00 00	   db 01h,00h,'h','H',00h,00h,00h ; ScanCode:23h <h,H>
+1   153	000001A1  01 00	6A 4A 00 00 00	   db 01h,00h,'j','J',00h,00h,00h ; ScanCode:24h <j,J>
+1   154	000001A8  01 00	6B 4B 00 00 00	   db 01h,00h,'k','K',00h,00h,00h ; ScanCode:25h <k,K>
+1   155	000001AF  01 00	6C 4C 00 00 00	   db 01h,00h,'l','L',00h,00h,00h ; ScanCode:26h <l,L>
+1   156	000001B6  04 00	3B 3A 00 00 00	   db 04h,00h,';',':',00h,00h,00h ; ScanCode:27h <;,:>
+1   157	000001BD  0B 00	03 02 00 00 00	   db 0Bh,00h,03h,02h,00h,00h,00h ; ScanCode:28h <',">
+1   158	000001C4  0B 00	01 05 00 00 00	   db 0Bh,00h,01h,05h,00h,00h,00h ; ScanCode:29h <`,~>
+1   159	000001CB  0C 00	02 00 00 00 00	   db 0Ch,00h,02h,00h,00h,00h,00h ; ScanCode:2Ah <shift-left>
+1   160	000001D2  04 00	5C 7C 00 00 00	   db 04h,00h,'\','|',00h,00h,00h ; ScanCode:2Bh <\,|>
+1   161	000001D9  01 00	7A 5A 00 00 00	   db 01h,00h,'z','Z',00h,00h,00h ; ScanCode:2Ch <z,Z>
+1   162	000001E0  01 00	78 58 00 00 00	   db 01h,00h,'x','X',00h,00h,00h ; ScanCode:2Dh <x,X>
+1   163	000001E7  01 08	63 43 00 00 00	   db 01h,08h,'c','C',00h,00h,00h ; ScanCode:2Eh <c,C>
+1   164	000001EE  01 00	76 56 00 00 00	   db 01h,00h,'v','V',00h,00h,00h ; ScanCode:2Fh <v,V>
+1   165	000001F5  01 00	62 42 00 00 00	   db 01h,00h,'b','B',00h,00h,00h ; ScanCode:30h <b,B>
+1   166	000001FC  01 20	6E 4E 00 00 00	   db 01h,20h,'n','N',00h,00h,00h ; ScanCode:31h <n,N>
+1   167	00000203  01 00	6D 4D 00 00 00	   db 01h,00h,'m','M',00h,00h,00h ; ScanCode:32h <m,M>
+1   168	0000020A  04 00	2C 3C 00 00 00	   db 04h,00h,',','<',00h,00h,00h ; ScanCode:33h <,,<>
+1   169	00000211  04 00	2E 3E 00 00 00	   db 04h,00h,'.','>',00h,00h,00h ; ScanCode:34h <.,>>
+1   170	00000218  04 00	2F 3F 00 00 00	   db 04h,00h,'/','?',00h,00h,00h ; ScanCode:35h </,?>
+1   171	0000021F  0C 00	01 00 00 00 00	   db 0Ch,00h,01h,00h,00h,00h,00h ; ScanCode:36h <shift-right>
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 4
+kbd101ec.asm
+
+
+
+1   172	00000226  09 00	2A 72 00 00 00	   db 09h,00h,'*',72h,00h,00h,00h ; ScanCode:37h <keypad *>
+1   173	0000022D  0E 00	08 02 08 00 00	   db 0Eh,00h,08h,02h,08h,00h,00h ; ScanCode:38h <alt-left>
+1   174	00000234  04 3E	20 20 00 00 00	   db 04h,3Eh,'	',' ',00h,00h,00h ; ScanCode:39h <spacebar>
+1   175	0000023B  10 00	40 40 40 00 00	   db 10h,00h,40h,40h,40h,00h,00h ; ScanCode:3Ah <capslock>
+1   176	00000242  06 00	01 00 00 00 00	   db 06h,00h,001,00h,00h,00h,00h ; ScanCode:3Bh <F1>
+1   177	00000249  06 00	02 00 00 00 00	   db 06h,00h,002,00h,00h,00h,00h ; ScanCode:3Ch <F2>
+1   178	00000250  06 00	03 00 00 00 00	   db 06h,00h,003,00h,00h,00h,00h ; ScanCode:3Dh <F3>
+1   179	00000257  06 00	04 00 00 00 00	   db 06h,00h,004,00h,00h,00h,00h ; ScanCode:3Eh <F4>
+1   180	0000025E  06 00	05 00 00 00 00	   db 06h,00h,005,00h,00h,00h,00h ; ScanCode:3Fh <F5>
+1   181	00000265  06 00	06 00 00 00 00	   db 06h,00h,006,00h,00h,00h,00h ; ScanCode:40h <F6>
+1   182	0000026C  06 00	07 00 00 00 00	   db 06h,00h,007,00h,00h,00h,00h ; ScanCode:41h <F7>
+1   183	00000273  06 00	08 00 00 00 00	   db 06h,00h,008,00h,00h,00h,00h ; ScanCode:42h <F8>
+1   184	0000027A  06 00	09 00 00 00 00	   db 06h,00h,009,00h,00h,00h,00h ; ScanCode:43h <F9>
+1   185	00000281  06 00	0A 00 00 00 00	   db 06h,00h,010,00h,00h,00h,00h ; ScanCode:44h <F10>
+1   186	00000288  0F 00	20 20 20 00 00	   db 0Fh,00h,20h,20h,20h,00h,00h ; ScanCode:45h <numlock>
+1   187	0000028F  11 00	10 10 10 00 00	   db 11h,00h,10h,10h,10h,00h,00h ; ScanCode:46h <scrolllock>
+1   188	00000296  07 00	00 37 00 00 00	   db 07h,00h,00h,'7',00h,00h,00h ; ScanCode:47h <keypad><7,home>
+1   189	0000029D  07 00	01 38 00 00 00	   db 07h,00h,01h,'8',00h,00h,00h ; ScanCode:48h <keypad><8,up>
+1   190	000002A4  07 00	02 39 00 00 00	   db 07h,00h,02h,'9',00h,00h,00h ; ScanCode:49h <keypad><9,pgup>
+1   191	000002AB  07 00	03 2D 00 00 00	   db 07h,00h,03h,'-',00h,00h,00h ; ScanCode:4Ah <keypad><-,->
+1   192	000002B2  07 00	04 34 00 00 00	   db 07h,00h,04h,'4',00h,00h,00h ; ScanCode:4Bh <keypad><4,left>
+1   193	000002B9  07 00	05 35 00 00 00	   db 07h,00h,05h,'5',00h,00h,00h ; ScanCode:4Ch <keypad><5>
+1   194	000002C0  07 00	06 36 00 00 00	   db 07h,00h,06h,'6',00h,00h,00h ; ScanCode:4Dh <keypad><6,right>
+1   195	000002C7  07 00	07 2B 00 00 00	   db 07h,00h,07h,'+',00h,00h,00h ; ScanCode:4Eh <keypad><+,+>
+1   196	000002CE  07 00	08 31 00 00 00	   db 07h,00h,08h,'1',00h,00h,00h ; ScanCode:4Fh <keypad><1,end>
+1   197	000002D5  07 00	09 32 00 00 00	   db 07h,00h,09h,'2',00h,00h,00h ; ScanCode:50h <keypad><2,down>
+1   198	000002DC  07 00	0A 33 00 00 00	   db 07h,00h,0Ah,'3',00h,00h,00h ; ScanCode:51h <keypad><3,pgdn>
+1   199	000002E3  07 00	0B 30 00 00 00	   db 07h,00h,0Bh,'0',00h,00h,00h ; ScanCode:52h <keypad><0,ins>
+1   200	000002EA  07 00	0C 2E 00 00 00	   db 07h,00h,0Ch,'.',00h,00h,00h ; ScanCode:53h <keypad><.,del>
+1   201	000002F1  0A 00	00 80 80 00 00	   db 0Ah,00h,00h,80h,80h,00h,00h ; ScanCode:54h <alt><sysrq>
+1   202	000002F8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:55h
+1   203	000002FF  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:56h
+1   204	00000306  06 00	0B 00 00 00 00	   db 06h,00h,011,00h,00h,00h,00h ; ScanCode:57h <F11>
+1   205	0000030D  06 00	0C 00 00 00 00	   db 06h,00h,012,00h,00h,00h,00h ; ScanCode:58h <F12>
+1   206	00000314  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:59h
+1   207	0000031B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
+1   208	00000322  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
+1   209	00000329  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
+1   210	00000330  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
+1   211	00000337  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
+1   212	0000033E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
+1   213	00000345  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:60h
+1   214	0000034C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:61h
+1   215	00000353  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:62h
+1   216	0000035A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:63h
+1   217	00000361  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:64h
+1   218	00000368  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:65h
+1   219	0000036F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:66h
+1   220	00000376  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:67h
+1   221	0000037D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:68h
+1   222	00000384  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:69h
+1   223	0000038B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
+1   224	00000392  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
+1   225	00000399  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
+1   226	000003A0  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
+1   227	000003A7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
+1   228	000003AE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 5
+kbd101ec.asm
+
+
+
+1   229	000003B5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:70h
+1   230	000003BC  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:71h
+1   231	000003C3  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:72h
+1   232	000003CA  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:73h
+1   233	000003D1  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:74h
+1   234	000003D8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:75h
+1   235	000003DF  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:76h
+1   236	000003E6  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:77h
+1   237	000003ED  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:78h
+1   238	000003F4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:79h
+1   239	000003FB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
+1   240	00000402  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
+1   241	00000409  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
+1   242	00000410  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
+1   243	00000417  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
+1   244	0000041E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
+1   245					 ; AccentEntry:02h
+1   246	00000425  60 29	04*(00)		   db '`',29h,4	dup(0) ; <accent><scancode>
+1   247	0000042B  61 85	65 8A 69 8D 6F+	   db 'a','Ö','e','ä','i','ç','o','ï','u','ó'
+    248		  95 75	97
+1   249	00000435  41 B7	45 D4 49 DE 4F+	   db 'A','∑','E','‘','I','ﬁ','O','„','U','Î'
+    250		  E3 55	EB
+1   251	0000043F  20 60	12*(00)		   db '	','`',18 dup(0)	; <space><accent>
+1   252					 ; AccentEntry:04h
+1   253	00000453  22 28	04*(00)		   db '"',28h,4	dup(0) ; <accent><scancode>
+1   254	00000459  61 84	65 89 69 8B 6F+	   db 'a','Ñ','e','â','i','ã','o','î','u','Å','y','ò'
+    255		  94 75	81 79 98
+1   256	00000465  41 8E	45 D3 49 D8 4F+	   db 'A','é','E','”','I','ÿ','O','ô','U','ö' ;
+    257		  99 55	9A
+1   258	0000046F  20 22	10*(00)		   db '	','"',16 dup(0)	; <space><accent>
+1   259					 ; AccentEntry:08h
+1   260	00000481  27 28	04*(00)		   db "'",28h,4	dup(0) ; <accent><scancode>
+1   261	00000487  61 A0	63 87 65 82 69+	   db 'a','†','c','á','e','Ç','i','°','o','¢','u','£','y','Ï'
+    262		  A1 6F	A2 75 A3 79 EC
+1   263	00000495  41 B5	43 80 45 90 49+	   db 'A','µ','C','Ä','E','ê','I','÷','O','‡','U','È','Y','Ì'
+    264		  D6 4F	E0 55 E9 59 ED
+1   265	000004A3  20 27	0A*(00)		   db '	',"'",10 dup(0)	; <space><accent>
+1   266					 ; AccentEntry:10h
+1   267	000004AF  5E 07	04*(00)		   db '^',07h,4	dup(0) ; <accent><scancode>
+1   268	000004B5  61 83	65 88 69 8C 6F+	   db 'a','É','e','à','i','å','o','ì','u','ñ'
+    269		  93 75	96
+1   270	000004BF  41 B6	45 D2 49 D7 4F+	   db 'A','∂','E','“','I','◊','O','‚','U','Í'
+    271		  E2 55	EA
+1   272	000004C9  20 5E	12*(00)		   db '	','^',18 dup(0)	; <space><accent>
+1   273					 ; AccentEntry:20h
+1   274	000004DD  7E 29	04*(00)		   db '~',29h,4	dup(0) ; <accent><scancode>
+1   275	000004E3  61 C6	6F E4 6E A4	   db 'a','∆','o','‰','n','§'
+1   276	000004E9  41 C7	4F E5 4E A5	   db 'A','«','O','Â','N','•'
+1   277	000004EF  20 7E	1A*(00)		   db '	','~',26 dup(0)	; <space><accent>
+1   278					 ; AccentEntry:40h
+1   279	0000050B  2E*(00)		   db 46 dup(0)	; <unused>
+1   280					 ; AccentEntry:80h
+1   281	00000539  2E*(00)		   db 46 dup(0)	; <unused>
+1   282
+    283					 ; default br274 table for codepage 850
+    284	00000567  0352 00000054	      +	 Table2	header {cp=850,cc='BR',cs='274',tf=54h}
+    285		  00000001 04E3	007F  +
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 6
+kbd101ec.asm
+
+
+
+    286		  0007 4252 0001 32 37+
+    287		  34 20	08*(0000)
+    288					 include 'kbd274br.inc'
+1   289	0000058F  08 00	1B 1B 00 00 00	   db 08h,00h,1Bh,1Bh,00h,00h,00h ; ScanCode:01h <escape>
+1   290	00000596  04 00	31 21 C0 00 00	   db 04h,00h,'1','!','¿',00h,00h ; ScanCode:02h <1,!,¿>
+1   291	0000059D  04 00	32 40 C1 00 00	   db 04h,00h,'2','@','¡',00h,00h ; ScanCode:03h <2,@,¡>
+1   292	000005A4  04 00	33 23 D9 00 00	   db 04h,00h,'3','#','Ÿ',00h,00h ; ScanCode:04h <3,#,Ÿ>
+1   293	000005AB  04 00	34 24 C3 00 00	   db 04h,00h,'4','$','√',00h,00h ; ScanCode:05h <4,$,√>
+1   294	000005B2  04 00	35 25 C5 00 00	   db 04h,00h,'5','%','≈',00h,00h ; ScanCode:06h <5,%,≈>
+1   295	000005B9  0B 00	36 04 B4 00 00	   db 0Bh,00h,'6',04h,'¥',00h,00h ; ScanCode:07h <6,^,¥>
+1   296	000005C0  04 00	37 26 DA 00 00	   db 04h,00h,'7','&','⁄',00h,00h ; ScanCode:08h <7,&,⁄>
+1   297	000005C7  04 00	38 2A C2 00 00	   db 04h,00h,'8','*','¬',00h,00h ; ScanCode:09h <8,*,¬>
+1   298	000005CE  04 00	39 28 BF 00 00	   db 04h,00h,'9','(','ø',00h,00h ; ScanCode:0Ah <9,(,ø>
+1   299	000005D5  04 00	30 29 FE 00 00	   db 04h,00h,'0',')','˛',00h,00h ; ScanCode:0Bh <0,),˛>
+1   300	000005DC  04 00	2D 5F C4 00 00	   db 04h,00h,'-','_','ƒ',00h,00h ; ScanCode:0Ch <-,_,ƒ>
+1   301	000005E3  04 00	3D 2B B3 00 00	   db 04h,00h,'=','+','≥',00h,00h ; ScanCode:0Dh <=,+,≥>
+1   302	000005EA  08 00	08 7F 00 00 00	   db 08h,00h,08h,7Fh,00h,00h,00h ; ScanCode:0Eh <backspace>
+1   303	000005F1  04 00	09 00 00 00 00	   db 04h,00h,09h,00h,00h,00h,00h ; ScanCode:0Fh <tab>
+1   304	000005F8  01 00	71 51 00 00 00	   db 01h,00h,'q','Q',00h,00h,00h ; ScanCode:10h <q,Q>
+1   305	000005FF  01 00	77 57 00 00 00	   db 01h,00h,'w','W',00h,00h,00h ; ScanCode:11h <w,W
+1   306	00000606  01 1E	65 45 D5 00 00	   db 01h,1Eh,'e','E','’',00h,00h ; ScanCode:12h <e,E,’>
+1   307	0000060D  01 00	72 52 00 00 00	   db 01h,00h,'r','R',00h,00h,00h ; ScanCode:13h <r,R>
+1   308	00000614  01 00	74 54 00 00 00	   db 01h,00h,'t','T',00h,00h,00h ; ScanCode:14h <t,T>
+1   309	0000061B  01 0C	79 59 00 00 00	   db 01h,0Ch,'y','Y',00h,00h,00h ; ScanCode:15h <y,Y>
+1   310	00000622  01 1E	75 55 00 00 00	   db 01h,1Eh,'u','U',00h,00h,00h ; ScanCode:16h <u,U>
+1   311	00000629  01 1E	69 49 00 00 00	   db 01h,1Eh,'i','I',00h,00h,00h ; ScanCode:17h <i,I>
+1   312	00000630  01 3E	6F 4F 00 00 00	   db 01h,3Eh,'o','O',00h,00h,00h ; ScanCode:18h <o,O>
+1   313	00000637  01 00	70 50 00 00 00	   db 01h,00h,'p','P',00h,00h,00h ; ScanCode:19h <p,P>
+1   314	0000063E  04 00	5B 7B 00 00 00	   db 04h,00h,'[','{',00h,00h,00h ; ScanCode:1Ah <[,{>
+1   315	00000645  04 00	5D 7D 00 00 00	   db 04h,00h,']','}',00h,00h,00h ; ScanCode:1Bh <],}>
+1   316	0000064C  08 00	0D 0A 00 00 00	   db 08h,00h,0Dh,0Ah,00h,00h,00h ; ScanCode:1Ch <enter>
+1   317	00000653  0C 00	04 01 04 00 00	   db 0Ch,00h,04h,01h,04h,00h,00h ; ScanCode:1Dh <ctrl-left>
+1   318	0000065A  01 3E	61 41 00 00 00	   db 01h,3Eh,'a','A',00h,00h,00h ; ScanCode:1Eh <a,A>
+1   319	00000661  01 00	73 53 00 00 00	   db 01h,00h,'s','S',00h,00h,00h ; ScanCode:1Fh <s,S>
+1   320	00000668  01 00	64 44 00 00 00	   db 01h,00h,'d','D',00h,00h,00h ; ScanCode:20h <d,D>
+1   321	0000066F  01 00	66 46 00 00 00	   db 01h,00h,'f','F',00h,00h,00h ; ScanCode:21h <f,F>
+1   322	00000676  01 00	67 47 00 00 00	   db 01h,00h,'g','G',00h,00h,00h ; ScanCode:22h <g,G>
+1   323	0000067D  01 00	68 48 00 00 00	   db 01h,00h,'h','H',00h,00h,00h ; ScanCode:23h <h,H>
+1   324	00000684  01 00	6A 4A 00 00 00	   db 01h,00h,'j','J',00h,00h,00h ; ScanCode:24h <j,J>
+1   325	0000068B  01 00	6B 4B 00 00 00	   db 01h,00h,'k','K',00h,00h,00h ; ScanCode:25h <k,K>
+1   326	00000692  01 00	6C 4C 00 00 00	   db 01h,00h,'l','L',00h,00h,00h ; ScanCode:26h <l,L>
+1   327	00000699  04 00	3B 3A 00 00 00	   db 04h,00h,';',':',00h,00h,00h ; ScanCode:27h <;,:>
+1   328	000006A0  0B 00	03 02 00 00 00	   db 0Bh,00h,03h,02h,00h,00h,00h ; ScanCode:28h <',">
+1   329	000006A7  0B 00	01 05 00 00 00	   db 0Bh,00h,01h,05h,00h,00h,00h ; ScanCode:29h <`,~>
+1   330	000006AE  0C 00	02 00 00 00 00	   db 0Ch,00h,02h,00h,00h,00h,00h ; ScanCode:2Ah <shift-left>
+1   331	000006B5  04 00	5C 7C 00 00 00	   db 04h,00h,'\','|',00h,00h,00h ; ScanCode:2Bh <\,|>
+1   332	000006BC  01 00	7A 5A 00 00 00	   db 01h,00h,'z','Z',00h,00h,00h ; ScanCode:2Ch <z,Z>
+1   333	000006C3  01 00	78 58 00 00 00	   db 01h,00h,'x','X',00h,00h,00h ; ScanCode:2Dh <x,X>
+1   334	000006CA  01 08	63 43 00 00 00	   db 01h,08h,'c','C',00h,00h,00h ; ScanCode:2Eh <c,C>
+1   335	000006D1  01 00	76 56 00 00 00	   db 01h,00h,'v','V',00h,00h,00h ; ScanCode:2Fh <v,V>
+1   336	000006D8  01 00	62 42 00 00 00	   db 01h,00h,'b','B',00h,00h,00h ; ScanCode:30h <b,B>
+1   337	000006DF  01 20	6E 4E 00 00 00	   db 01h,20h,'n','N',00h,00h,00h ; ScanCode:31h <n,N>
+1   338	000006E6  01 00	6D 4D 00 00 00	   db 01h,00h,'m','M',00h,00h,00h ; ScanCode:32h <m,M>
+1   339	000006ED  04 00	2C 3C 00 00 00	   db 04h,00h,',','<',00h,00h,00h ; ScanCode:33h <,,<>
+1   340	000006F4  04 00	2E 3E 00 00 00	   db 04h,00h,'.','>',00h,00h,00h ; ScanCode:34h <.,>>
+1   341	000006FB  04 00	2F 3F 00 00 00	   db 04h,00h,'/','?',00h,00h,00h ; ScanCode:35h </,?>
+1   342	00000702  0C 00	01 00 00 00 00	   db 0Ch,00h,01h,00h,00h,00h,00h ; ScanCode:36h <shift-right>
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 7
+kbd101ec.asm
+
+
+
+1   343	00000709  09 00	2A 72 00 00 00	   db 09h,00h,'*',72h,00h,00h,00h ; ScanCode:37h <keypad *>
+1   344	00000710  0E 00	08 02 08 00 00	   db 0Eh,00h,08h,02h,08h,00h,00h ; ScanCode:38h <alt-left>
+1   345	00000717  04 3E	20 20 00 00 00	   db 04h,3Eh,'	',' ',00h,00h,00h ; ScanCode:39h <spacebar>
+1   346	0000071E  10 00	40 40 40 00 00	   db 10h,00h,40h,40h,40h,00h,00h ; ScanCode:3Ah <capslock>
+1   347	00000725  06 00	01 00 00 00 00	   db 06h,00h,001,00h,00h,00h,00h ; ScanCode:3Bh <F1>
+1   348	0000072C  06 00	02 00 00 00 00	   db 06h,00h,002,00h,00h,00h,00h ; ScanCode:3Ch <F2>
+1   349	00000733  06 00	03 00 00 00 00	   db 06h,00h,003,00h,00h,00h,00h ; ScanCode:3Dh <F3>
+1   350	0000073A  06 00	04 00 00 00 00	   db 06h,00h,004,00h,00h,00h,00h ; ScanCode:3Eh <F4>
+1   351	00000741  06 00	05 00 00 00 00	   db 06h,00h,005,00h,00h,00h,00h ; ScanCode:3Fh <F5>
+1   352	00000748  06 00	06 00 00 00 00	   db 06h,00h,006,00h,00h,00h,00h ; ScanCode:40h <F6>
+1   353	0000074F  06 00	07 00 00 00 00	   db 06h,00h,007,00h,00h,00h,00h ; ScanCode:41h <F7>
+1   354	00000756  06 00	08 00 00 00 00	   db 06h,00h,008,00h,00h,00h,00h ; ScanCode:42h <F8>
+1   355	0000075D  06 00	09 00 00 00 00	   db 06h,00h,009,00h,00h,00h,00h ; ScanCode:43h <F9>
+1   356	00000764  06 00	0A 00 00 00 00	   db 06h,00h,010,00h,00h,00h,00h ; ScanCode:44h <F10>
+1   357	0000076B  0F 00	20 20 20 00 00	   db 0Fh,00h,20h,20h,20h,00h,00h ; ScanCode:45h <numlock>
+1   358	00000772  11 00	10 10 10 00 00	   db 11h,00h,10h,10h,10h,00h,00h ; ScanCode:46h <scrolllock>
+1   359	00000779  07 00	00 37 00 00 00	   db 07h,00h,00h,'7',00h,00h,00h ; ScanCode:47h <keypad><7,home>
+1   360	00000780  07 00	01 38 00 00 00	   db 07h,00h,01h,'8',00h,00h,00h ; ScanCode:48h <keypad><8,up>
+1   361	00000787  07 00	02 39 00 00 00	   db 07h,00h,02h,'9',00h,00h,00h ; ScanCode:49h <keypad><9,pgup>
+1   362	0000078E  07 00	03 2D 00 00 00	   db 07h,00h,03h,'-',00h,00h,00h ; ScanCode:4Ah <keypad><-,->
+1   363	00000795  07 00	04 34 00 00 00	   db 07h,00h,04h,'4',00h,00h,00h ; ScanCode:4Bh <keypad><4,left>
+1   364	0000079C  07 00	05 35 00 00 00	   db 07h,00h,05h,'5',00h,00h,00h ; ScanCode:4Ch <keypad><5>
+1   365	000007A3  07 00	06 36 00 00 00	   db 07h,00h,06h,'6',00h,00h,00h ; ScanCode:4Dh <keypad><6,right>
+1   366	000007AA  07 00	07 2B 00 00 00	   db 07h,00h,07h,'+',00h,00h,00h ; ScanCode:4Eh <keypad><+,+>
+1   367	000007B1  07 00	08 31 00 00 00	   db 07h,00h,08h,'1',00h,00h,00h ; ScanCode:4Fh <keypad><1,end>
+1   368	000007B8  07 00	09 32 00 00 00	   db 07h,00h,09h,'2',00h,00h,00h ; ScanCode:50h <keypad><2,down>
+1   369	000007BF  07 00	0A 33 00 00 00	   db 07h,00h,0Ah,'3',00h,00h,00h ; ScanCode:51h <keypad><3,pgdn>
+1   370	000007C6  07 00	0B 30 00 00 00	   db 07h,00h,0Bh,'0',00h,00h,00h ; ScanCode:52h <keypad><0,ins>
+1   371	000007CD  07 00	0C 2E 00 00 00	   db 07h,00h,0Ch,'.',00h,00h,00h ; ScanCode:53h <keypad><.,del>
+1   372	000007D4  0A 00	00 80 80 00 00	   db 0Ah,00h,00h,80h,80h,00h,00h ; ScanCode:54h <alt><sysrq>
+1   373	000007DB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:55h
+1   374	000007E2  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:56h
+1   375	000007E9  06 00	0B 00 00 00 00	   db 06h,00h,011,00h,00h,00h,00h ; ScanCode:57h <F11>
+1   376	000007F0  06 00	0C 00 00 00 00	   db 06h,00h,012,00h,00h,00h,00h ; ScanCode:58h <F12>
+1   377	000007F7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:59h
+1   378	000007FE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
+1   379	00000805  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
+1   380	0000080C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
+1   381	00000813  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
+1   382	0000081A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
+1   383	00000821  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
+1   384	00000828  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:60h
+1   385	0000082F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:61h
+1   386	00000836  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:62h
+1   387	0000083D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:63h
+1   388	00000844  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:64h
+1   389	0000084B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:65h
+1   390	00000852  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:66h
+1   391	00000859  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:67h
+1   392	00000860  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:68h
+1   393	00000867  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:69h
+1   394	0000086E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
+1   395	00000875  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
+1   396	0000087C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
+1   397	00000883  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
+1   398	0000088A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
+1   399	00000891  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 8
+kbd101ec.asm
+
+
+
+1   400	00000898  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:70h
+1   401	0000089F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:71h
+1   402	000008A6  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:72h
+1   403	000008AD  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:73h
+1   404	000008B4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:74h
+1   405	000008BB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:75h
+1   406	000008C2  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:76h
+1   407	000008C9  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:77h
+1   408	000008D0  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:78h
+1   409	000008D7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:79h
+1   410	000008DE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
+1   411	000008E5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
+1   412	000008EC  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
+1   413	000008F3  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
+1   414	000008FA  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
+1   415	00000901  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
+1   416					 ; AccentEntry:02h
+1   417	00000908  60 29	04*(00)		   db '`',29h,4	dup(0) ; <accent><scancode>
+1   418	0000090E  61 85	65 8A 69 8D 6F+	   db 'a','Ö','e','ä','i','ç','o','ï','u','ó'
+    419		  95 75	97
+1   420	00000918  41 B7	45 D4 49 DE 4F+	   db 'A','∑','E','‘','I','ﬁ','O','„','U','Î'
+    421		  E3 55	EB
+1   422	00000922  20 60	12*(00)		   db '	','`',18 dup(0)	; <space><accent>
+1   423					 ; AccentEntry:04h
+1   424	00000936  22 28	04*(00)		   db '"',28h,4	dup(0) ; <accent><scancode>
+1   425	0000093C  61 84	65 89 69 8B 6F+	   db 'a','Ñ','e','â','i','ã','o','î','u','Å','y','ò'
+    426		  94 75	81 79 98
+1   427	00000948  41 8E	45 D3 49 D8 4F+	   db 'A','é','E','”','I','ÿ','O','ô','U','ö' ;
+    428		  99 55	9A
+1   429	00000952  20 22	10*(00)		   db '	','"',16 dup(0)	; <space><accent>
+1   430					 ; AccentEntry:08h
+1   431	00000964  27 28	04*(00)		   db "'",28h,4	dup(0) ; <accent><scancode>
+1   432	0000096A  61 A0	63 87 65 82 69+	   db 'a','†','c','á','e','Ç','i','°','o','¢','u','£','y','Ï'
+    433		  A1 6F	A2 75 A3 79 EC
+1   434	00000978  41 B5	43 80 45 90 49+	   db 'A','µ','C','Ä','E','ê','I','÷','O','‡','U','È','Y','Ì'
+    435		  D6 4F	E0 55 E9 59 ED
+1   436	00000986  20 27	0A*(00)		   db '	',"'",10 dup(0)	; <space><accent>
+1   437					 ; AccentEntry:10h
+1   438	00000992  5E 07	04*(00)		   db '^',07h,4	dup(0) ; <accent><scancode>
+1   439	00000998  61 83	65 88 69 8C 6F+	   db 'a','É','e','à','i','å','o','ì','u','ñ'
+    440		  93 75	96
+1   441	000009A2  41 B6	45 D2 49 D7 4F+	   db 'A','∂','E','“','I','◊','O','‚','U','Í'
+    442		  E2 55	EA
+1   443	000009AC  20 5E	12*(00)		   db '	','^',18 dup(0)	; <space><accent>
+1   444					 ; AccentEntry:20h
+1   445	000009C0  7E 29	04*(00)		   db '~',29h,4	dup(0) ; <accent><scancode>
+1   446	000009C6  61 C6	6F E4 6E A4	   db 'a','∆','o','‰','n','§'
+1   447	000009CC  41 C7	4F E5 4E A5	   db 'A','«','O','Â','N','•'
+1   448	000009D2  20 7E	1A*(00)		   db '	','~',26 dup(0)	; <space><accent>
+1   449					 ; AccentEntry:40h
+1   450	000009EE  2E*(00)		   db 46 dup(0)	; <unused>
+1   451					 ; AccentEntry:80h
+1   452	00000A1C  2E*(00)		   db 46 dup(0)	; <unused>
+1   453
+    454					 ; default us103 table for codepage 437
+    455	00000A4A  01B5 00000010	      +	 Table3	header {cp=437,cc='BR',cs='103',tf=10h}
+    456		  00000001 04E3	007F  +
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 9
+kbd101ec.asm
+
+
+
+    457		  0007 4252 0001 31 30+
+    458		  33 20	08*(0000)
+    459					 include 'kbd103us.inc'
+1   460	00000A72  08 00	1B 1B 00 00 00	   db 08h,00h,1Bh,1Bh,00h,00h,00h ; ScanCode:01h <escape>
+1   461	00000A79  04 00	31 21 C0 00 00	   db 04h,00h,'1','!','¿',00h,00h ; ScanCode:02h <1,!,¿>
+1   462	00000A80  04 00	32 40 C1 00 00	   db 04h,00h,'2','@','¡',00h,00h ; ScanCode:03h <2,@,¡>
+1   463	00000A87  04 00	33 23 D9 00 00	   db 04h,00h,'3','#','Ÿ',00h,00h ; ScanCode:04h <3,#,Ÿ>
+1   464	00000A8E  04 00	34 24 C3 00 00	   db 04h,00h,'4','$','√',00h,00h ; ScanCode:05h <4,$,√>
+1   465	00000A95  04 00	35 25 C5 00 00	   db 04h,00h,'5','%','≈',00h,00h ; ScanCode:06h <5,%,≈>
+1   466	00000A9C  04 00	36 5E B4 00 00	   db 04h,00h,'6','^','¥',00h,00h ; ScanCode:07h <6,^,¥>
+1   467	00000AA3  04 00	37 26 DA 00 00	   db 04h,00h,'7','&','⁄',00h,00h ; ScanCode:08h <7,&,⁄>
+1   468	00000AAA  04 00	38 2A C2 00 00	   db 04h,00h,'8','*','¬',00h,00h ; ScanCode:09h <8,*,¬>
+1   469	00000AB1  04 00	39 28 BF 00 00	   db 04h,00h,'9','(','ø',00h,00h ; ScanCode:0Ah <9,(,ø>
+1   470	00000AB8  04 00	30 29 FE 00 00	   db 04h,00h,'0',')','˛',00h,00h ; ScanCode:0Bh <0,),˛>
+1   471	00000ABF  04 00	2D 5F C4 00 00	   db 04h,00h,'-','_','ƒ',00h,00h ; ScanCode:0Ch <-,_,ƒ>
+1   472	00000AC6  04 00	3D 2B B3 00 00	   db 04h,00h,'=','+','≥',00h,00h ; ScanCode:0Dh <=,+,≥>
+1   473	00000ACD  08 00	08 7F 00 00 00	   db 08h,00h,08h,7Fh,00h,00h,00h ; ScanCode:0Eh <backspace>
+1   474	00000AD4  04 00	09 00 00 00 00	   db 04h,00h,09h,00h,00h,00h,00h ; ScanCode:0Fh <tab>
+1   475	00000ADB  01 00	71 51 00 00 00	   db 01h,00h,'q','Q',00h,00h,00h ; ScanCode:10h <q,Q>
+1   476	00000AE2  01 00	77 57 00 00 00	   db 01h,00h,'w','W',00h,00h,00h ; ScanCode:11h <w,W
+1   477	00000AE9  01 00	65 45 D5 00 00	   db 01h,00h,'e','E','’',00h,00h ; ScanCode:12h <e,E,’>
+1   478	00000AF0  01 00	72 52 00 00 00	   db 01h,00h,'r','R',00h,00h,00h ; ScanCode:13h <r,R>
+1   479	00000AF7  01 00	74 54 00 00 00	   db 01h,00h,'t','T',00h,00h,00h ; ScanCode:14h <t,T>
+1   480	00000AFE  01 00	79 59 00 00 00	   db 01h,00h,'y','Y',00h,00h,00h ; ScanCode:15h <y,Y>
+1   481	00000B05  01 00	75 55 00 00 00	   db 01h,00h,'u','U',00h,00h,00h ; ScanCode:16h <u,U>
+1   482	00000B0C  01 00	69 49 00 00 00	   db 01h,00h,'i','I',00h,00h,00h ; ScanCode:17h <i,I>
+1   483	00000B13  01 00	6F 4F 00 00 00	   db 01h,00h,'o','O',00h,00h,00h ; ScanCode:18h <o,O>
+1   484	00000B1A  01 00	70 50 00 00 00	   db 01h,00h,'p','P',00h,00h,00h ; ScanCode:19h <p,P>
+1   485	00000B21  04 00	5B 7B 00 00 00	   db 04h,00h,'[','{',00h,00h,00h ; ScanCode:1Ah <[,{>
+1   486	00000B28  04 00	5D 7D 00 00 00	   db 04h,00h,']','}',00h,00h,00h ; ScanCode:1Bh <],}>
+1   487	00000B2F  08 00	0D 0A 00 00 00	   db 08h,00h,0Dh,0Ah,00h,00h,00h ; ScanCode:1Ch <enter>
+1   488	00000B36  0C 00	04 01 04 00 00	   db 0Ch,00h,04h,01h,04h,00h,00h ; ScanCode:1Dh <ctrl-left>
+1   489	00000B3D  01 00	61 41 00 00 00	   db 01h,00h,'a','A',00h,00h,00h ; ScanCode:1Eh <a,A>
+1   490	00000B44  01 00	73 53 00 00 00	   db 01h,00h,'s','S',00h,00h,00h ; ScanCode:1Fh <s,S>
+1   491	00000B4B  01 00	64 44 00 00 00	   db 01h,00h,'d','D',00h,00h,00h ; ScanCode:20h <d,D>
+1   492	00000B52  01 00	66 46 00 00 00	   db 01h,00h,'f','F',00h,00h,00h ; ScanCode:21h <f,F>
+1   493	00000B59  01 00	67 47 00 00 00	   db 01h,00h,'g','G',00h,00h,00h ; ScanCode:22h <g,G>
+1   494	00000B60  01 00	68 48 00 00 00	   db 01h,00h,'h','H',00h,00h,00h ; ScanCode:23h <h,H>
+1   495	00000B67  01 00	6A 4A 00 00 00	   db 01h,00h,'j','J',00h,00h,00h ; ScanCode:24h <j,J>
+1   496	00000B6E  01 00	6B 4B 00 00 00	   db 01h,00h,'k','K',00h,00h,00h ; ScanCode:25h <k,K>
+1   497	00000B75  01 00	6C 4C 00 00 00	   db 01h,00h,'l','L',00h,00h,00h ; ScanCode:26h <l,L>
+1   498	00000B7C  04 00	3B 3A 00 00 00	   db 04h,00h,';',':',00h,00h,00h ; ScanCode:27h <;,:>
+1   499	00000B83  04 00	27 22 00 00 00	   db 04h,00h,"'",'"',00h,00h,00h ; ScanCode:28h <',">
+1   500	00000B8A  04 00	60 7E 00 00 00	   db 04h,00h,'`','~',00h,00h,00h ; ScanCode:29h <`,~>
+1   501	00000B91  0C 00	02 00 00 00 00	   db 0Ch,00h,02h,00h,00h,00h,00h ; ScanCode:2Ah <shift-left>
+1   502	00000B98  04 00	5C 7C 00 00 00	   db 04h,00h,'\','|',00h,00h,00h ; ScanCode:2Bh <\,|>
+1   503	00000B9F  01 00	7A 5A 00 00 00	   db 01h,00h,'z','Z',00h,00h,00h ; ScanCode:2Ch <z,Z>
+1   504	00000BA6  01 00	78 58 00 00 00	   db 01h,00h,'x','X',00h,00h,00h ; ScanCode:2Dh <x,X>
+1   505	00000BAD  01 00	63 43 00 00 00	   db 01h,00h,'c','C',00h,00h,00h ; ScanCode:2Eh <c,C>
+1   506	00000BB4  01 00	76 56 00 00 00	   db 01h,00h,'v','V',00h,00h,00h ; ScanCode:2Fh <v,V>
+1   507	00000BBB  01 00	62 42 00 00 00	   db 01h,00h,'b','B',00h,00h,00h ; ScanCode:30h <b,B>
+1   508	00000BC2  01 00	6E 4E 00 00 00	   db 01h,00h,'n','N',00h,00h,00h ; ScanCode:31h <n,N>
+1   509	00000BC9  01 00	6D 4D 00 00 00	   db 01h,00h,'m','M',00h,00h,00h ; ScanCode:32h <m,M>
+1   510	00000BD0  04 00	2C 3C 00 00 00	   db 04h,00h,',','<',00h,00h,00h ; ScanCode:33h <,,<>
+1   511	00000BD7  04 00	2E 3E 00 00 00	   db 04h,00h,'.','>',00h,00h,00h ; ScanCode:34h <.,>>
+1   512	00000BDE  04 00	2F 3F 00 00 00	   db 04h,00h,'/','?',00h,00h,00h ; ScanCode:35h </,?>
+1   513	00000BE5  0C 00	01 00 00 00 00	   db 0Ch,00h,01h,00h,00h,00h,00h ; ScanCode:36h <shift-right>
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 10
+kbd101ec.asm
+
+
+
+1   514	00000BEC  09 00	2A 72 00 00 00	   db 09h,00h,'*',72h,00h,00h,00h ; ScanCode:37h <keypad *>
+1   515	00000BF3  0E 00	08 02 08 00 00	   db 0Eh,00h,08h,02h,08h,00h,00h ; ScanCode:38h <alt-left>
+1   516	00000BFA  04 00	20 20 00 00 00	   db 04h,00h,'	',' ',00h,00h,00h ; ScanCode:39h <spacebar>
+1   517	00000C01  10 00	40 40 40 00 00	   db 10h,00h,40h,40h,40h,00h,00h ; ScanCode:3Ah <capslock>
+1   518	00000C08  06 00	01 00 00 00 00	   db 06h,00h,001,00h,00h,00h,00h ; ScanCode:3Bh <F1>
+1   519	00000C0F  06 00	02 00 00 00 00	   db 06h,00h,002,00h,00h,00h,00h ; ScanCode:3Ch <F2>
+1   520	00000C16  06 00	03 00 00 00 00	   db 06h,00h,003,00h,00h,00h,00h ; ScanCode:3Dh <F3>
+1   521	00000C1D  06 00	04 00 00 00 00	   db 06h,00h,004,00h,00h,00h,00h ; ScanCode:3Eh <F4>
+1   522	00000C24  06 00	05 00 00 00 00	   db 06h,00h,005,00h,00h,00h,00h ; ScanCode:3Fh <F5>
+1   523	00000C2B  06 00	06 00 00 00 00	   db 06h,00h,006,00h,00h,00h,00h ; ScanCode:40h <F6>
+1   524	00000C32  06 00	07 00 00 00 00	   db 06h,00h,007,00h,00h,00h,00h ; ScanCode:41h <F7>
+1   525	00000C39  06 00	08 00 00 00 00	   db 06h,00h,008,00h,00h,00h,00h ; ScanCode:42h <F8>
+1   526	00000C40  06 00	09 00 00 00 00	   db 06h,00h,009,00h,00h,00h,00h ; ScanCode:43h <F9>
+1   527	00000C47  06 00	0A 00 00 00 00	   db 06h,00h,010,00h,00h,00h,00h ; ScanCode:44h <F10>
+1   528	00000C4E  0F 00	20 20 20 00 00	   db 0Fh,00h,20h,20h,20h,00h,00h ; ScanCode:45h <numlock>
+1   529	00000C55  11 00	10 10 10 00 00	   db 11h,00h,10h,10h,10h,00h,00h ; ScanCode:46h <scrolllock>
+1   530	00000C5C  07 00	00 37 00 00 00	   db 07h,00h,00h,'7',00h,00h,00h ; ScanCode:47h <keypad><7,home>
+1   531	00000C63  07 00	01 38 00 00 00	   db 07h,00h,01h,'8',00h,00h,00h ; ScanCode:48h <keypad><8,up>
+1   532	00000C6A  07 00	02 39 00 00 00	   db 07h,00h,02h,'9',00h,00h,00h ; ScanCode:49h <keypad><9,pgup>
+1   533	00000C71  07 00	03 2D 00 00 00	   db 07h,00h,03h,'-',00h,00h,00h ; ScanCode:4Ah <keypad><-,->
+1   534	00000C78  07 00	04 34 00 00 00	   db 07h,00h,04h,'4',00h,00h,00h ; ScanCode:4Bh <keypad><4,left>
+1   535	00000C7F  07 00	05 35 00 00 00	   db 07h,00h,05h,'5',00h,00h,00h ; ScanCode:4Ch <keypad><5>
+1   536	00000C86  07 00	06 36 00 00 00	   db 07h,00h,06h,'6',00h,00h,00h ; ScanCode:4Dh <keypad><6,right>
+1   537	00000C8D  07 00	07 2B 00 00 00	   db 07h,00h,07h,'+',00h,00h,00h ; ScanCode:4Eh <keypad><+,+>
+1   538	00000C94  07 00	08 31 00 00 00	   db 07h,00h,08h,'1',00h,00h,00h ; ScanCode:4Fh <keypad><1,end>
+1   539	00000C9B  07 00	09 32 00 00 00	   db 07h,00h,09h,'2',00h,00h,00h ; ScanCode:50h <keypad><2,down>
+1   540	00000CA2  07 00	0A 33 00 00 00	   db 07h,00h,0Ah,'3',00h,00h,00h ; ScanCode:51h <keypad><3,pgdn>
+1   541	00000CA9  07 00	0B 30 00 00 00	   db 07h,00h,0Bh,'0',00h,00h,00h ; ScanCode:52h <keypad><0,ins>
+1   542	00000CB0  07 00	0C 2E 00 00 00	   db 07h,00h,0Ch,'.',00h,00h,00h ; ScanCode:53h <keypad><.,del>
+1   543	00000CB7  0A 00	00 80 80 00 00	   db 0Ah,00h,00h,80h,80h,00h,00h ; ScanCode:54h <alt><sysrq>
+1   544	00000CBE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:55h
+1   545	00000CC5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:56h
+1   546	00000CCC  06 00	0B 00 00 00 00	   db 06h,00h,011,00h,00h,00h,00h ; ScanCode:57h <F11>
+1   547	00000CD3  06 00	0C 00 00 00 00	   db 06h,00h,012,00h,00h,00h,00h ; ScanCode:58h <F12>
+1   548	00000CDA  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:59h
+1   549	00000CE1  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
+1   550	00000CE8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
+1   551	00000CEF  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
+1   552	00000CF6  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
+1   553	00000CFD  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
+1   554	00000D04  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
+1   555	00000D0B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:60h
+1   556	00000D12  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:61h
+1   557	00000D19  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:62h
+1   558	00000D20  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:63h
+1   559	00000D27  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:64h
+1   560	00000D2E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:65h
+1   561	00000D35  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:66h
+1   562	00000D3C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:67h
+1   563	00000D43  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:68h
+1   564	00000D4A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:69h
+1   565	00000D51  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
+1   566	00000D58  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
+1   567	00000D5F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
+1   568	00000D66  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
+1   569	00000D6D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
+1   570	00000D74  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 11
+kbd101ec.asm
+
+
+
+1   571	00000D7B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:70h
+1   572	00000D82  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:71h
+1   573	00000D89  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:72h
+1   574	00000D90  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:73h
+1   575	00000D97  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:74h
+1   576	00000D9E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:75h
+1   577	00000DA5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:76h
+1   578	00000DAC  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:77h
+1   579	00000DB3  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:78h
+1   580	00000DBA  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:79h
+1   581	00000DC1  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
+1   582	00000DC8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
+1   583	00000DCF  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
+1   584	00000DD6  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
+1   585	00000DDD  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
+1   586	00000DE4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
+1   587					 ; unused accent table
+1   588	00000DEB  0142*(00)		   db 7*46 dup(0)
+1   589
+    590					 ; default us103 table for codepage 850
+    591	00000F2D  0352 00000014	      +	 Table4	header {cp=850,cc='US',cs='103',tf=14h}
+    592		  00000001 04E3	007F  +
+    593		  0007 5553 0001 31 30+
+    594		  33 20	08*(0000)
+    595					 include 'kbd103us.inc'
+1   596	00000F55  08 00	1B 1B 00 00 00	   db 08h,00h,1Bh,1Bh,00h,00h,00h ; ScanCode:01h <escape>
+1   597	00000F5C  04 00	31 21 C0 00 00	   db 04h,00h,'1','!','¿',00h,00h ; ScanCode:02h <1,!,¿>
+1   598	00000F63  04 00	32 40 C1 00 00	   db 04h,00h,'2','@','¡',00h,00h ; ScanCode:03h <2,@,¡>
+1   599	00000F6A  04 00	33 23 D9 00 00	   db 04h,00h,'3','#','Ÿ',00h,00h ; ScanCode:04h <3,#,Ÿ>
+1   600	00000F71  04 00	34 24 C3 00 00	   db 04h,00h,'4','$','√',00h,00h ; ScanCode:05h <4,$,√>
+1   601	00000F78  04 00	35 25 C5 00 00	   db 04h,00h,'5','%','≈',00h,00h ; ScanCode:06h <5,%,≈>
+1   602	00000F7F  04 00	36 5E B4 00 00	   db 04h,00h,'6','^','¥',00h,00h ; ScanCode:07h <6,^,¥>
+1   603	00000F86  04 00	37 26 DA 00 00	   db 04h,00h,'7','&','⁄',00h,00h ; ScanCode:08h <7,&,⁄>
+1   604	00000F8D  04 00	38 2A C2 00 00	   db 04h,00h,'8','*','¬',00h,00h ; ScanCode:09h <8,*,¬>
+1   605	00000F94  04 00	39 28 BF 00 00	   db 04h,00h,'9','(','ø',00h,00h ; ScanCode:0Ah <9,(,ø>
+1   606	00000F9B  04 00	30 29 FE 00 00	   db 04h,00h,'0',')','˛',00h,00h ; ScanCode:0Bh <0,),˛>
+1   607	00000FA2  04 00	2D 5F C4 00 00	   db 04h,00h,'-','_','ƒ',00h,00h ; ScanCode:0Ch <-,_,ƒ>
+1   608	00000FA9  04 00	3D 2B B3 00 00	   db 04h,00h,'=','+','≥',00h,00h ; ScanCode:0Dh <=,+,≥>
+1   609	00000FB0  08 00	08 7F 00 00 00	   db 08h,00h,08h,7Fh,00h,00h,00h ; ScanCode:0Eh <backspace>
+1   610	00000FB7  04 00	09 00 00 00 00	   db 04h,00h,09h,00h,00h,00h,00h ; ScanCode:0Fh <tab>
+1   611	00000FBE  01 00	71 51 00 00 00	   db 01h,00h,'q','Q',00h,00h,00h ; ScanCode:10h <q,Q>
+1   612	00000FC5  01 00	77 57 00 00 00	   db 01h,00h,'w','W',00h,00h,00h ; ScanCode:11h <w,W
+1   613	00000FCC  01 00	65 45 D5 00 00	   db 01h,00h,'e','E','’',00h,00h ; ScanCode:12h <e,E,’>
+1   614	00000FD3  01 00	72 52 00 00 00	   db 01h,00h,'r','R',00h,00h,00h ; ScanCode:13h <r,R>
+1   615	00000FDA  01 00	74 54 00 00 00	   db 01h,00h,'t','T',00h,00h,00h ; ScanCode:14h <t,T>
+1   616	00000FE1  01 00	79 59 00 00 00	   db 01h,00h,'y','Y',00h,00h,00h ; ScanCode:15h <y,Y>
+1   617	00000FE8  01 00	75 55 00 00 00	   db 01h,00h,'u','U',00h,00h,00h ; ScanCode:16h <u,U>
+1   618	00000FEF  01 00	69 49 00 00 00	   db 01h,00h,'i','I',00h,00h,00h ; ScanCode:17h <i,I>
+1   619	00000FF6  01 00	6F 4F 00 00 00	   db 01h,00h,'o','O',00h,00h,00h ; ScanCode:18h <o,O>
+1   620	00000FFD  01 00	70 50 00 00 00	   db 01h,00h,'p','P',00h,00h,00h ; ScanCode:19h <p,P>
+1   621	00001004  04 00	5B 7B 00 00 00	   db 04h,00h,'[','{',00h,00h,00h ; ScanCode:1Ah <[,{>
+1   622	0000100B  04 00	5D 7D 00 00 00	   db 04h,00h,']','}',00h,00h,00h ; ScanCode:1Bh <],}>
+1   623	00001012  08 00	0D 0A 00 00 00	   db 08h,00h,0Dh,0Ah,00h,00h,00h ; ScanCode:1Ch <enter>
+1   624	00001019  0C 00	04 01 04 00 00	   db 0Ch,00h,04h,01h,04h,00h,00h ; ScanCode:1Dh <ctrl-left>
+1   625	00001020  01 00	61 41 00 00 00	   db 01h,00h,'a','A',00h,00h,00h ; ScanCode:1Eh <a,A>
+1   626	00001027  01 00	73 53 00 00 00	   db 01h,00h,'s','S',00h,00h,00h ; ScanCode:1Fh <s,S>
+1   627	0000102E  01 00	64 44 00 00 00	   db 01h,00h,'d','D',00h,00h,00h ; ScanCode:20h <d,D>
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 12
+kbd101ec.asm
+
+
+
+1   628	00001035  01 00	66 46 00 00 00	   db 01h,00h,'f','F',00h,00h,00h ; ScanCode:21h <f,F>
+1   629	0000103C  01 00	67 47 00 00 00	   db 01h,00h,'g','G',00h,00h,00h ; ScanCode:22h <g,G>
+1   630	00001043  01 00	68 48 00 00 00	   db 01h,00h,'h','H',00h,00h,00h ; ScanCode:23h <h,H>
+1   631	0000104A  01 00	6A 4A 00 00 00	   db 01h,00h,'j','J',00h,00h,00h ; ScanCode:24h <j,J>
+1   632	00001051  01 00	6B 4B 00 00 00	   db 01h,00h,'k','K',00h,00h,00h ; ScanCode:25h <k,K>
+1   633	00001058  01 00	6C 4C 00 00 00	   db 01h,00h,'l','L',00h,00h,00h ; ScanCode:26h <l,L>
+1   634	0000105F  04 00	3B 3A 00 00 00	   db 04h,00h,';',':',00h,00h,00h ; ScanCode:27h <;,:>
+1   635	00001066  04 00	27 22 00 00 00	   db 04h,00h,"'",'"',00h,00h,00h ; ScanCode:28h <',">
+1   636	0000106D  04 00	60 7E 00 00 00	   db 04h,00h,'`','~',00h,00h,00h ; ScanCode:29h <`,~>
+1   637	00001074  0C 00	02 00 00 00 00	   db 0Ch,00h,02h,00h,00h,00h,00h ; ScanCode:2Ah <shift-left>
+1   638	0000107B  04 00	5C 7C 00 00 00	   db 04h,00h,'\','|',00h,00h,00h ; ScanCode:2Bh <\,|>
+1   639	00001082  01 00	7A 5A 00 00 00	   db 01h,00h,'z','Z',00h,00h,00h ; ScanCode:2Ch <z,Z>
+1   640	00001089  01 00	78 58 00 00 00	   db 01h,00h,'x','X',00h,00h,00h ; ScanCode:2Dh <x,X>
+1   641	00001090  01 00	63 43 00 00 00	   db 01h,00h,'c','C',00h,00h,00h ; ScanCode:2Eh <c,C>
+1   642	00001097  01 00	76 56 00 00 00	   db 01h,00h,'v','V',00h,00h,00h ; ScanCode:2Fh <v,V>
+1   643	0000109E  01 00	62 42 00 00 00	   db 01h,00h,'b','B',00h,00h,00h ; ScanCode:30h <b,B>
+1   644	000010A5  01 00	6E 4E 00 00 00	   db 01h,00h,'n','N',00h,00h,00h ; ScanCode:31h <n,N>
+1   645	000010AC  01 00	6D 4D 00 00 00	   db 01h,00h,'m','M',00h,00h,00h ; ScanCode:32h <m,M>
+1   646	000010B3  04 00	2C 3C 00 00 00	   db 04h,00h,',','<',00h,00h,00h ; ScanCode:33h <,,<>
+1   647	000010BA  04 00	2E 3E 00 00 00	   db 04h,00h,'.','>',00h,00h,00h ; ScanCode:34h <.,>>
+1   648	000010C1  04 00	2F 3F 00 00 00	   db 04h,00h,'/','?',00h,00h,00h ; ScanCode:35h </,?>
+1   649	000010C8  0C 00	01 00 00 00 00	   db 0Ch,00h,01h,00h,00h,00h,00h ; ScanCode:36h <shift-right>
+1   650	000010CF  09 00	2A 72 00 00 00	   db 09h,00h,'*',72h,00h,00h,00h ; ScanCode:37h <keypad *>
+1   651	000010D6  0E 00	08 02 08 00 00	   db 0Eh,00h,08h,02h,08h,00h,00h ; ScanCode:38h <alt-left>
+1   652	000010DD  04 00	20 20 00 00 00	   db 04h,00h,'	',' ',00h,00h,00h ; ScanCode:39h <spacebar>
+1   653	000010E4  10 00	40 40 40 00 00	   db 10h,00h,40h,40h,40h,00h,00h ; ScanCode:3Ah <capslock>
+1   654	000010EB  06 00	01 00 00 00 00	   db 06h,00h,001,00h,00h,00h,00h ; ScanCode:3Bh <F1>
+1   655	000010F2  06 00	02 00 00 00 00	   db 06h,00h,002,00h,00h,00h,00h ; ScanCode:3Ch <F2>
+1   656	000010F9  06 00	03 00 00 00 00	   db 06h,00h,003,00h,00h,00h,00h ; ScanCode:3Dh <F3>
+1   657	00001100  06 00	04 00 00 00 00	   db 06h,00h,004,00h,00h,00h,00h ; ScanCode:3Eh <F4>
+1   658	00001107  06 00	05 00 00 00 00	   db 06h,00h,005,00h,00h,00h,00h ; ScanCode:3Fh <F5>
+1   659	0000110E  06 00	06 00 00 00 00	   db 06h,00h,006,00h,00h,00h,00h ; ScanCode:40h <F6>
+1   660	00001115  06 00	07 00 00 00 00	   db 06h,00h,007,00h,00h,00h,00h ; ScanCode:41h <F7>
+1   661	0000111C  06 00	08 00 00 00 00	   db 06h,00h,008,00h,00h,00h,00h ; ScanCode:42h <F8>
+1   662	00001123  06 00	09 00 00 00 00	   db 06h,00h,009,00h,00h,00h,00h ; ScanCode:43h <F9>
+1   663	0000112A  06 00	0A 00 00 00 00	   db 06h,00h,010,00h,00h,00h,00h ; ScanCode:44h <F10>
+1   664	00001131  0F 00	20 20 20 00 00	   db 0Fh,00h,20h,20h,20h,00h,00h ; ScanCode:45h <numlock>
+1   665	00001138  11 00	10 10 10 00 00	   db 11h,00h,10h,10h,10h,00h,00h ; ScanCode:46h <scrolllock>
+1   666	0000113F  07 00	00 37 00 00 00	   db 07h,00h,00h,'7',00h,00h,00h ; ScanCode:47h <keypad><7,home>
+1   667	00001146  07 00	01 38 00 00 00	   db 07h,00h,01h,'8',00h,00h,00h ; ScanCode:48h <keypad><8,up>
+1   668	0000114D  07 00	02 39 00 00 00	   db 07h,00h,02h,'9',00h,00h,00h ; ScanCode:49h <keypad><9,pgup>
+1   669	00001154  07 00	03 2D 00 00 00	   db 07h,00h,03h,'-',00h,00h,00h ; ScanCode:4Ah <keypad><-,->
+1   670	0000115B  07 00	04 34 00 00 00	   db 07h,00h,04h,'4',00h,00h,00h ; ScanCode:4Bh <keypad><4,left>
+1   671	00001162  07 00	05 35 00 00 00	   db 07h,00h,05h,'5',00h,00h,00h ; ScanCode:4Ch <keypad><5>
+1   672	00001169  07 00	06 36 00 00 00	   db 07h,00h,06h,'6',00h,00h,00h ; ScanCode:4Dh <keypad><6,right>
+1   673	00001170  07 00	07 2B 00 00 00	   db 07h,00h,07h,'+',00h,00h,00h ; ScanCode:4Eh <keypad><+,+>
+1   674	00001177  07 00	08 31 00 00 00	   db 07h,00h,08h,'1',00h,00h,00h ; ScanCode:4Fh <keypad><1,end>
+1   675	0000117E  07 00	09 32 00 00 00	   db 07h,00h,09h,'2',00h,00h,00h ; ScanCode:50h <keypad><2,down>
+1   676	00001185  07 00	0A 33 00 00 00	   db 07h,00h,0Ah,'3',00h,00h,00h ; ScanCode:51h <keypad><3,pgdn>
+1   677	0000118C  07 00	0B 30 00 00 00	   db 07h,00h,0Bh,'0',00h,00h,00h ; ScanCode:52h <keypad><0,ins>
+1   678	00001193  07 00	0C 2E 00 00 00	   db 07h,00h,0Ch,'.',00h,00h,00h ; ScanCode:53h <keypad><.,del>
+1   679	0000119A  0A 00	00 80 80 00 00	   db 0Ah,00h,00h,80h,80h,00h,00h ; ScanCode:54h <alt><sysrq>
+1   680	000011A1  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:55h
+1   681	000011A8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:56h
+1   682	000011AF  06 00	0B 00 00 00 00	   db 06h,00h,011,00h,00h,00h,00h ; ScanCode:57h <F11>
+1   683	000011B6  06 00	0C 00 00 00 00	   db 06h,00h,012,00h,00h,00h,00h ; ScanCode:58h <F12>
+1   684	000011BD  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:59h
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 13
+kbd101ec.asm
+
+
+
+1   685	000011C4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
+1   686	000011CB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
+1   687	000011D2  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
+1   688	000011D9  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
+1   689	000011E0  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
+1   690	000011E7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
+1   691	000011EE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:60h
+1   692	000011F5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:61h
+1   693	000011FC  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:62h
+1   694	00001203  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:63h
+1   695	0000120A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:64h
+1   696	00001211  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:65h
+1   697	00001218  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:66h
+1   698	0000121F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:67h
+1   699	00001226  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:68h
+1   700	0000122D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:69h
+1   701	00001234  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
+1   702	0000123B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
+1   703	00001242  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
+1   704	00001249  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
+1   705	00001250  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
+1   706	00001257  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
+1   707	0000125E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:70h
+1   708	00001265  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:71h
+1   709	0000126C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:72h
+1   710	00001273  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:73h
+1   711	0000127A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:74h
+1   712	00001281  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:75h
+1   713	00001288  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:76h
+1   714	0000128F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:77h
+1   715	00001296  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:78h
+1   716	0000129D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:79h
+1   717	000012A4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
+1   718	000012AB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
+1   719	000012B2  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
+1   720	000012B9  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
+1   721	000012C0  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
+1   722	000012C7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
+1   723					 ; unused accent table
+1   724	000012CE  0142*(00)		   db 7*46 dup(0)
+1   725
+    726		  =1400			 dcpTotal=$-dcpStart
+    727
+    728					 end MainRoutine
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 14
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "24-02-16"
+??FILENAME			  Text	 "kbd101ec"
+??TIME				  Text	 "18:51:03"
+??VERSION			  Number 0401
+@32BIT				  Text	 1
+@@ARG				  Number [FLAT:EBP+0014]
+@@ENV				  Number [FLAT:EBP+0010]
+@@MOD				  Number [FLAT:EBP+0008]
+@@NUL				  Number [FLAT:EBP+000C]
+@CODE				  Text	 FLAT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F8FH
+@CURSEG				  Text	 _DATA
+@DATA				  Text	 FLAT
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 KBD101EC
+@INTERFACE			  Text	 00H
+@MODEL				  Text	 1
+@STACK				  Text	 FLAT
+@WORDSIZE			  Text	 4
+ACTIONTAKEN			  Dword	 FLAT:0000
+BYTESDONE			  Dword	 FLAT:0004
+DCPCOUNT			  Word	 FLAT:0038
+DCPEMPTY			  Word	 FLAT:0082
+DCPSTART			  Dword	 FLAT:0010
+DCPTOTAL			  Number 1400
+DOSCLOSE			  Near	 ----:---- Extern
+DOSEXIT				  Near	 ----:---- Extern
+DOSOPEN				  Near	 ----:---- Extern
+DOSWRITE			  Near	 ----:---- Extern
+ENTRY1				  Struct FLAT:003A ENTRY
+ENTRY2				  Struct FLAT:004C ENTRY
+ENTRY3				  Struct FLAT:005E ENTRY
+ENTRY4				  Struct FLAT:0070 ENTRY
+FHOUTPUT			  Dword	 FLAT:000C
+MAINROUTINE			  Near	 FLAT:0000
+REPORTRESULT			  Near	 FLAT:005B
+SZOUTPUT			  Byte	 FLAT:0000
+TABLE1				  Struct FLAT:0084 HEADER
+TABLE2				  Struct FLAT:0567 HEADER
+TABLE3				  Struct FLAT:0A4A HEADER
+TABLE4				  Struct FLAT:0F2D HEADER
+VENDOR				  Byte	 FLAT:0014
+
+Structure Name			  Type	Offset
+
+ENTRY
+ SF				  Word	 0000
+ CC				  Word	 0002
+ CS				  Byte	 0004
+ W1				  Word	 0008
+ CP				  Word	 000A
+ KT				  Word	 000C
+ HO				  Dword	 000E
+Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 15
+Symbol Table
+
+
+
+HEADER
+ CP				  Word	 0000
+ TF				  Dword	 0002
+ KT				  Dword	 0006
+ TS				  Word	 000A
+ EC				  Word	 000C
+ EW				  Word	 000E
+ CC				  Word	 0010
+ TT				  Word	 0012
+ CS				  Byte	 0014
+ W8				  Word	 0018
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  STACK				  32  2000 Para	  Stack	  STACK
+  _BSS				  32  0008 Dword  Public  BSS
+  _DATA				  32  1410 Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  0066 Dword  Public  CODE
+

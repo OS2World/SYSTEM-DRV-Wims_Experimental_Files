@@ -1,0 +1,27 @@
+
+ BMSCALLS
+
+ Start         Length     Name                   Class
+ 0001:00000000 000000039H _TEXT                  CODE 16-bit
+ 0002:00000000 000000107H _DATA                  DATA 16-bit
+
+ Origin   Group
+ 0002:0   DGROUP
+
+ Address       Export                  Alias
+
+ 0000:00000000 BmsMain                 BmsMain
+
+  Address         Publics by Name
+
+ 0000:00000000  Imp  BmsMain              (DOSCALLS.852)
+ 0000:00000000  Imp  DOS16GETMODNAME      (DOSCALLS.48)
+ 0000:00000000  Imp  DOS16WRITE           (DOSCALLS.138)
+
+  Address         Publics by Value
+
+ 0000:00000000  Imp  DOS16GETMODNAME      (DOSCALLS.48)
+ 0000:00000000  Imp  BmsMain              (DOSCALLS.852)
+ 0000:00000000  Imp  DOS16WRITE           (DOSCALLS.138)
+
+Program entry point at 0001:00000000

@@ -1,0 +1,10 @@
+library bmscalls
+description '@#W.M.Brul:0.20160215#@BMSCALLS'
+protmode
+
+exports
+  BmsMain @1
+
+imports
+  BmsMain=DOSCALLS.852
+

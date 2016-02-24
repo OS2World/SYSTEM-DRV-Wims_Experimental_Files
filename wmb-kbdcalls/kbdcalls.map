@@ -1,0 +1,93 @@
+
+ KBDCALLS
+
+ Start         Length     Name                   Class
+ 0001:00000000 000000039H _TEXT                  CODE 16-bit
+ 0002:00000000 000000107H _DATA                  DATA 16-bit
+
+ Origin   Group
+ 0002:0   DGROUP
+
+ Address       Export                  Alias
+
+ 0000:00000000 KbdCharIn               KbdCharIn
+ 0000:00000000 KbdClose                KbdClose
+ 0000:00000000 KbdDeRegister           KbdDeRegister
+ 0000:00000000 KbdFlushBuffer          KbdFlushBuffer
+ 0000:00000000 KbdFree                 KbdFree
+ 0000:00000000 KbdFreeFocus            KbdFreeFocus
+ 0000:00000000 KbdGetCp                KbdGetCp
+ 0000:00000000 KbdGetFocus             KbdGetFocus
+ 0000:00000000 KbdGetHWId              KbdGetHWId
+ 0000:00000000 KbdGetStatus            KbdGetStatus
+ 0000:00000000 KbdLoadInstance         KbdLoadInstance
+ 0000:00000000 KbdOpen                 KbdOpen
+ 0000:00000000 KbdPeek                 KbdPeek
+ 0000:00000000 KbdRegister             KbdRegister
+ 0000:00000000 KbdSetCp                KbdSetCp
+ 0000:00000000 KbdSetCustXt            KbdSetCustXt
+ 0000:00000000 KbdSetFgnd              KbdSetFgnd
+ 0000:00000000 KbdSetStatus            KbdSetStatus
+ 0000:00000000 KbdShellInit            KbdShellInit
+ 0000:00000000 KbdStringIn             KbdStringIn
+ 0000:00000000 KbdSwitchFgnd           KbdSwitchFgnd
+ 0000:00000000 KbdSynch                KbdSynch
+ 0000:00000000 KbdXlate                KbdXlate
+
+  Address         Publics by Name
+
+ 0000:00000000  Imp  DOS16GETMODNAME      (DOSCALLS.48)
+ 0000:00000000  Imp  DOS16WRITE           (DOSCALLS.138)
+ 0000:00000000  Imp  KbdCharIn            (DOSCALLS.748)
+ 0000:00000000  Imp  KbdClose             (DOSCALLS.761)
+ 0000:00000000  Imp  KbdDeRegister        (DOSCALLS.764)
+ 0000:00000000  Imp  KbdFlushBuffer       (DOSCALLS.757)
+ 0000:00000000  Imp  KbdFree              (DOSCALLS.763)
+ 0000:00000000  Imp  KbdFreeFocus         (DOSCALLS.762)
+ 0000:00000000  Imp  KbdGetCp             (DOSCALLS.747)
+ 0000:00000000  Imp  KbdGetFocus          (DOSCALLS.756)
+ 0000:00000000  Imp  KbdGetHWId           (DOSCALLS.768)
+ 0000:00000000  Imp  KbdGetStatus         (DOSCALLS.754)
+ 0000:00000000  Imp  KbdLoadInstance      (DOSCALLS.750)
+ 0000:00000000  Imp  KbdOpen              (DOSCALLS.767)
+ 0000:00000000  Imp  KbdPeek              (DOSCALLS.766)
+ 0000:00000000  Imp  KbdRegister          (DOSCALLS.752)
+ 0000:00000000  Imp  KbdSetCp             (DOSCALLS.749)
+ 0000:00000000  Imp  KbdSetCustXt         (DOSCALLS.745)
+ 0000:00000000  Imp  KbdSetFgnd           (DOSCALLS.765)
+ 0000:00000000  Imp  KbdSetStatus         (DOSCALLS.755)
+ 0000:00000000  Imp  KbdShellInit         (DOSCALLS.760)
+ 0000:00000000  Imp  KbdStringIn          (DOSCALLS.753)
+ 0000:00000000  Imp  KbdSwitchFgnd        (DOSCALLS.759)
+ 0000:00000000  Imp  KbdSynch             (DOSCALLS.751)
+ 0000:00000000  Imp  KbdXlate             (DOSCALLS.758)
+
+  Address         Publics by Value
+
+ 0000:00000000  Imp  KbdRegister          (DOSCALLS.752)
+ 0000:00000000  Imp  KbdStringIn          (DOSCALLS.753)
+ 0000:00000000  Imp  KbdGetFocus          (DOSCALLS.756)
+ 0000:00000000  Imp  KbdShellInit         (DOSCALLS.760)
+ 0000:00000000  Imp  KbdFreeFocus         (DOSCALLS.762)
+ 0000:00000000  Imp  KbdSetCustXt         (DOSCALLS.745)
+ 0000:00000000  Imp  KbdGetStatus         (DOSCALLS.754)
+ 0000:00000000  Imp  KbdSetStatus         (DOSCALLS.755)
+ 0000:00000000  Imp  KbdSwitchFgnd        (DOSCALLS.759)
+ 0000:00000000  Imp  KbdDeRegister        (DOSCALLS.764)
+ 0000:00000000  Imp  KbdFlushBuffer       (DOSCALLS.757)
+ 0000:00000000  Imp  DOS16GETMODNAME      (DOSCALLS.48)
+ 0000:00000000  Imp  KbdLoadInstance      (DOSCALLS.750)
+ 0000:00000000  Imp  KbdFree              (DOSCALLS.763)
+ 0000:00000000  Imp  KbdPeek              (DOSCALLS.766)
+ 0000:00000000  Imp  KbdOpen              (DOSCALLS.767)
+ 0000:00000000  Imp  KbdGetCp             (DOSCALLS.747)
+ 0000:00000000  Imp  KbdSetCp             (DOSCALLS.749)
+ 0000:00000000  Imp  KbdSynch             (DOSCALLS.751)
+ 0000:00000000  Imp  KbdXlate             (DOSCALLS.758)
+ 0000:00000000  Imp  KbdClose             (DOSCALLS.761)
+ 0000:00000000  Imp  KbdCharIn            (DOSCALLS.748)
+ 0000:00000000  Imp  KbdSetFgnd           (DOSCALLS.765)
+ 0000:00000000  Imp  KbdGetHWId           (DOSCALLS.768)
+ 0000:00000000  Imp  DOS16WRITE           (DOSCALLS.138)
+
+Program entry point at 0001:00000000

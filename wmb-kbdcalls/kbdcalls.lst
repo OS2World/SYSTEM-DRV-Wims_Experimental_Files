@@ -1,0 +1,91 @@
+Turbo Assembler	 Version 4.1	    14-02-16 16:09:18	    Page 1
+kbdcalls.asm
+
+
+
+      1					 .386p
+      2	    0000			 model use16 small
+      3					 ideal
+      4
+      5					 extrn Dos16GetModName:far
+      6					 extrn Dos16Write:far
+      7
+      8		  =0104			 cchMaxPath=260	; bsedos.h
+      9		  =0105			 cchMaxText=cchMaxPath+1
+     10
+     11	    0000			 dataseg
+     12	    0000  ????			 BytesWritten dw ?
+     13	    0002  0105*(??)		 ModName db cchMaxText dup(?)
+     14
+     15	    0107			 codeseg
+     16	    0000			 proc InitKbdCalls far
+     17					 ; obtain fully	qualified module name
+     18					   call	Dos16GetModName	pascal,ax,cchMaxPath,ds,offset(ModName)
+1    19	    0000  50				 PUSH	 AX
+1    20	    0001  68 0104			 PUSH	 CCHMAXPATH
+1    21	    0004  1E				 PUSH	 DS
+1    22	    0005  68 0002r			 PUSH	 OFFSET(MODNAME)
+1    23	    0008  9A 00000000se			 CALL	 DOS16GETMODNAME
+     24					 ; determine module name length
+     25	    000D  8C D8			   mov ax,ds ; data selector
+     26	    000F  8E C0			   mov es,ax ; data selector
+     27	    0011  BF 0002r		   mov di,offset(ModName)
+     28	    0014  2B C0			   sub ax,ax ; zero terminator
+     29	    0016  B9 0104		   mov cx,cchMaxPath ; source
+     30	    0019  BA 0105		   mov dx,cchMaxText ; report
+     31	    001C  FC			   cld ; increment index registers
+     32	    001D  F2> AE		   repne scasb ; find zero terminator
+     33	    001F  C7 45	FF 0A0D		   mov [word(ds:di-1)],0A0Dh ; crlf
+     34	    0024  2B D1			   sub dx,cx ; module name length
+     35					 ; report fully	qualified module name
+     36					   call	Dos16Write pascal,1,ds,offset(ModName),dx,ds,offset(BytesWritten)
+1    37	    0026  6A 01				 PUSH	 1
+1    38	    0028  1E				 PUSH	 DS
+1    39	    0029  68 0002r			 PUSH	 OFFSET(MODNAME)
+1    40	    002C  52				 PUSH	 DX
+1    41	    002D  1E				 PUSH	 DS
+1    42	    002E  68 0000r			 PUSH	 OFFSET(BYTESWRITTEN)
+1    43	    0031  9A 00000000se			 CALL	 DOS16WRITE
+     44	    0036  B0 01			   mov al,1 ; success
+     45	    0038  CB			   ret ; return
+     46	    0039			 endp InitKbdCalls
+     47
+     48					 end InitKbdCalls
+Turbo Assembler	 Version 4.1	    14-02-16 16:09:18	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "14-02-16"
+??FILENAME			  Text	 "kbdcalls"
+??TIME				  Text	 "16:09:18"
+??VERSION			  Number 0401
+@32BIT				  Text	 0
+@CODE				  Text	 _TEXT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F8FH
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 DGROUP
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 KBDCALLS
+@INTERFACE			  Text	 00H
+@MODEL				  Text	 2
+@STACK				  Text	 DGROUP
+@WORDSIZE			  Text	 2
+BYTESWRITTEN			  Word	 DGROUP:0000
+CCHMAXPATH			  Number 0104
+CCHMAXTEXT			  Number 0105
+DOS16GETMODNAME			  Far	 ----:---- Extern
+DOS16WRITE			  Far	 ----:---- Extern
+INITKBDCALLS			  Far	 _TEXT:0000
+MODNAME				  Byte	 DGROUP:0002
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  16  0107 Word	  Public  DATA
+_TEXT				  16  0039 Word	  Public  CODE
+

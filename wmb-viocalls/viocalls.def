@@ -1,0 +1,163 @@
+library viocalls
+description '@#W.M.Brul:0.20160215#@VIOCALLS'
+protmode
+
+; exports according to http://home.clara.net/orac/os2/viocalls.htm
+; imports according to http://home.clara.net/orac/os2/doscalls.htm
+
+exports
+  VioEndPopUp @1
+  VioGetPhysBuf @2
+  VioGetAnsi @3
+; VioFree @4
+  VioSetAnsi @5
+  VioDeregister @6
+  VioScrollUp @7
+  VioPrtSc @8
+  VioGetCurPos @9
+  VioWrtCellStr @10
+  VioPopUp @11
+  VioScrollRt @12
+  VioWrtCharStr @13
+; Avs_Prtsc @14
+  VioSetCurPos @15
+; VioSrfUnblock @16
+; VioSrfBlock @17
+  VioScrUnLock @18
+  VioWrtTTY @19
+; VioSave @20
+  VioGetMode @21
+  VioSetMode @22
+  VioScrLock @23
+  VioReadCellStr @24
+  VioSavRedrawWait @25
+  VioWrtNAttr @26
+  VioGetCurType @27
+  VioSavRedrawUndo @28
+  VioGetFont @29
+  VioReadCharStr @30
+  VioGetBuf @31
+  VioSetCurType @32
+  VioSetFont @33
+; VioHetInit @34
+  VioModeUndo @35
+; VioSswSwitch @36
+  VioModeWait @37
+; Avs_PrtscToggle @38
+; VioInit @39
+  VioGetCP @40
+; VioRestore @41
+  VioSetCP @42
+  VioShowBuf @43
+  VioScrollLf @44
+  VioRegister @45
+  VioGetConfig @46
+  VioScrollDn @47
+  VioWrtCharStrAtt @48
+  VioGetState @49
+  VioPrtScToggle @50
+  VioSetState @51
+  VioWrtNCell @52
+  VioWrtNChar @53
+; VioShellInit @54
+  VioAssociate @55
+  VioCreatePS @56
+  VioDeleteSetId @57
+  VioGetDeviceCellSize @58
+  VioGetOrg @59
+  VioCreateLogFont @60
+  VioDestroyPS @61
+  VioQuerySetIds @62
+  VioSetOrg @63
+  VioQueryFonts @64
+  VioSetDeviceCellSize @65
+  VioShowPS @66
+  VioGetPSAddress @67
+; VioQueryConsole @68
+; VioRedrawSize @69
+  VioGlobalReg @70
+  XVioSetCAState @71
+  XVioCheckCharType @72
+  XVioDestroyCA @73
+  XVioCreateCA @74
+  VioCheckCharType @75
+  XVioGetCAState @76
+
+imports
+  VioEndPopUp=DOSCALLS.770
+  VioGetPhysBuf=DOSCALLS.771
+  VioGetAnsi=DOSCALLS.772
+; VioFree=DOSCALLS.773
+  VioSetAnsi=DOSCALLS.774
+  VioDeregister=DOSCALLS.775
+  VioScrollUp=DOSCALLS.776
+  VioPrtSc=DOSCALLS.777
+  VioGetCurPos=DOSCALLS.778
+  VioWrtCellStr=DOSCALLS.779
+  VioPopUp=DOSCALLS.780
+  VioScrollRt=DOSCALLS.781
+  VioWrtCharStr=DOSCALLS.782
+; Avs_Prtsc=DOSCALLS.783
+  VioSetCurPos=DOSCALLS.784
+; VioSrfUnblock=DOSCALLS.785
+; VioSrfBlock=DOSCALLS.786
+  VioScrUnLock=DOSCALLS.787
+  VioWrtTTY=DOSCALLS.788
+; VioSave=DOSCALLS.789
+  VioGetMode=DOSCALLS.790
+  VioSetMode=DOSCALLS.791
+  VioScrLock=DOSCALLS.792
+  VioReadCellStr=DOSCALLS.793
+  VioSavRedrawWait=DOSCALLS.794
+  VioWrtNAttr=DOSCALLS.795
+  VioGetCurType=DOSCALLS.796
+  VioSavRedrawUndo=DOSCALLS.797
+  VioGetFont=DOSCALLS.798
+  VioReadCharStr=DOSCALLS.799
+  VioGetBuf=DOSCALLS.800
+  VioSetCurType=DOSCALLS.801
+  VioSetFont=DOSCALLS.802
+; VioHetInit=DOSCALLS.803
+  VioModeUndo=DOSCALLS.804
+; VioSswSwitch=DOSCALLS.805
+  VioModeWait=DOSCALLS.806
+; Avs_PrtscToggle=DOSCALLS.807
+; VioInit=DOSCALLS.808?
+  VioGetCP=DOSCALLS.808
+; VioRestore=DOSCALLS.809
+  VioSetCP=DOSCALLS.810
+  VioShowBuf=DOSCALLS.811
+  VioScrollLf=DOSCALLS.812
+  VioRegister=DOSCALLS.813
+  VioGetConfig=DOSCALLS.814
+  VioScrollDn=DOSCALLS.815
+  VioWrtCharStrAtt=DOSCALLS.816
+  VioGetState=DOSCALLS.817
+  VioPrtScToggle=DOSCALLS.818
+  VioSetState=DOSCALLS.819
+  VioWrtNCell=DOSCALLS.820
+  VioWrtNChar=DOSCALLS.821
+; VioShellInit=DOSCALLS.822
+  VioAssociate=DOSCALLS.823
+  VioCreatePS=DOSCALLS.824
+  VioDeleteSetId=DOSCALLS.825
+  VioGetDeviceCellSize=DOSCALLS.826
+  VioGetOrg=DOSCALLS.827
+  VioCreateLogFont=DOSCALLS.828
+  VioDestroyPS=DOSCALLS.829
+  VioQuerySetIds=DOSCALLS.830
+  VioSetOrg=DOSCALLS.831
+  VioQueryFonts=DOSCALLS.832
+  VioSetDeviceCellSize=DOSCALLS.833
+  VioShowPS=DOSCALLS.834
+  VioGetPSAddress=DOSCALLS.835
+; VioQueryConsole=DOSCALLS.836
+; VioRedrawSize=DOSCALLS.837
+  VioGlobalReg=DOSCALLS.838
+  XVioSetCAState=DOSCALLS.839
+  XVioCheckCharType=DOSCALLS.840
+  XVioDestroyCA=DOSCALLS.841
+  XVioCreateCA=DOSCALLS.842
+  VioCheckCharType=DOSCALLS.843
+  XVioGetCAState=DOSCALLS.844
+

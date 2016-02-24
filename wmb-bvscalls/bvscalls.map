@@ -1,0 +1,27 @@
+
+ BVSCALLS
+
+ Start         Length     Name                   Class
+ 0001:00000000 000000000H _TEXT                  CODE 16-bit
+ 0001:00000000 000000000H _DATA                  DATA 16-bit
+
+ Origin   Group
+ 0001:0   DGROUP
+
+ Address       Export                  Alias
+
+ 0000:00000000 BvsGetPtrDrawName       BvsGetPtrDrawName
+ 0000:00000000 BvsMain                 BvsMain
+ 0000:00000000 BvsRedrawSize           BvsRedrawSize
+
+  Address         Publics by Name
+
+ 0000:00000000  Imp  BvsGetPtrDrawName    (DOSCALLS.847)
+ 0000:00000000  Imp  BvsMain              (DOSCALLS.845)
+ 0000:00000000  Imp  BvsRedrawSize        (DOSCALLS.846)
+
+  Address         Publics by Value
+
+ 0000:00000000  Imp  BvsRedrawSize        (DOSCALLS.846)
+ 0000:00000000  Imp  BvsGetPtrDrawName    (DOSCALLS.847)
+ 0000:00000000  Imp  BvsMain              (DOSCALLS.845)

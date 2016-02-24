@@ -1,0 +1,213 @@
+
+ VIOCALLS
+
+ Start         Length     Name                   Class
+ 0001:00000000 000000039H _TEXT                  CODE 16-bit
+ 0002:00000000 000000107H _DATA                  DATA 16-bit
+
+ Origin   Group
+ 0002:0   DGROUP
+
+ Address       Export                  Alias
+
+ 0000:00000000 VioAssociate            VioAssociate
+ 0000:00000000 VioCheckCharType        VioCheckCharType
+ 0000:00000000 VioCreateLogFont        VioCreateLogFont
+ 0000:00000000 VioCreatePS             VioCreatePS
+ 0000:00000000 VioDeleteSetId          VioDeleteSetId
+ 0000:00000000 VioDeregister           VioDeregister
+ 0000:00000000 VioDestroyPS            VioDestroyPS
+ 0000:00000000 VioEndPopUp             VioEndPopUp
+ 0000:00000000 VioGetAnsi              VioGetAnsi
+ 0000:00000000 VioGetBuf               VioGetBuf
+ 0000:00000000 VioGetConfig            VioGetConfig
+ 0000:00000000 VioGetCP                VioGetCP
+ 0000:00000000 VioGetCurPos            VioGetCurPos
+ 0000:00000000 VioGetCurType           VioGetCurType
+ 0000:00000000 VioGetDeviceCellSize    VioGetDeviceCellSize
+ 0000:00000000 VioGetFont              VioGetFont
+ 0000:00000000 VioGetMode              VioGetMode
+ 0000:00000000 VioGetOrg               VioGetOrg
+ 0000:00000000 VioGetPhysBuf           VioGetPhysBuf
+ 0000:00000000 VioGetPSAddress         VioGetPSAddress
+ 0000:00000000 VioGetState             VioGetState
+ 0000:00000000 VioGlobalReg            VioGlobalReg
+ 0000:00000000 VioModeUndo             VioModeUndo
+ 0000:00000000 VioModeWait             VioModeWait
+ 0000:00000000 VioPopUp                VioPopUp
+ 0000:00000000 VioPrtSc                VioPrtSc
+ 0000:00000000 VioPrtScToggle          VioPrtScToggle
+ 0000:00000000 VioQueryFonts           VioQueryFonts
+ 0000:00000000 VioQuerySetIds          VioQuerySetIds
+ 0000:00000000 VioReadCellStr          VioReadCellStr
+ 0000:00000000 VioReadCharStr          VioReadCharStr
+ 0000:00000000 VioRegister             VioRegister
+ 0000:00000000 VioSavRedrawUndo        VioSavRedrawUndo
+ 0000:00000000 VioSavRedrawWait        VioSavRedrawWait
+ 0000:00000000 VioScrLock              VioScrLock
+ 0000:00000000 VioScrollDn             VioScrollDn
+ 0000:00000000 VioScrollLf             VioScrollLf
+ 0000:00000000 VioScrollRt             VioScrollRt
+ 0000:00000000 VioScrollUp             VioScrollUp
+ 0000:00000000 VioScrUnLock            VioScrUnLock
+ 0000:00000000 VioSetAnsi              VioSetAnsi
+ 0000:00000000 VioSetCP                VioSetCP
+ 0000:00000000 VioSetCurPos            VioSetCurPos
+ 0000:00000000 VioSetCurType           VioSetCurType
+ 0000:00000000 VioSetDeviceCellSize    VioSetDeviceCellSize
+ 0000:00000000 VioSetFont              VioSetFont
+ 0000:00000000 VioSetMode              VioSetMode
+ 0000:00000000 VioSetOrg               VioSetOrg
+ 0000:00000000 VioSetState             VioSetState
+ 0000:00000000 VioShowBuf              VioShowBuf
+ 0000:00000000 VioShowPS               VioShowPS
+ 0000:00000000 VioWrtCellStr           VioWrtCellStr
+ 0000:00000000 VioWrtCharStr           VioWrtCharStr
+ 0000:00000000 VioWrtCharStrAtt        VioWrtCharStrAtt
+ 0000:00000000 VioWrtNAttr             VioWrtNAttr
+ 0000:00000000 VioWrtNCell             VioWrtNCell
+ 0000:00000000 VioWrtNChar             VioWrtNChar
+ 0000:00000000 VioWrtTTY               VioWrtTTY
+ 0000:00000000 XVioCheckCharType       XVioCheckCharType
+ 0000:00000000 XVioCreateCA            XVioCreateCA
+ 0000:00000000 XVioDestroyCA           XVioDestroyCA
+ 0000:00000000 XVioGetCAState          XVioGetCAState
+ 0000:00000000 XVioSetCAState          XVioSetCAState
+
+  Address         Publics by Name
+
+ 0000:00000000  Imp  DOS16GETMODNAME      (DOSCALLS.48)
+ 0000:00000000  Imp  DOS16WRITE           (DOSCALLS.138)
+ 0000:00000000  Imp  VioAssociate         (DOSCALLS.823)
+ 0000:00000000  Imp  VioCheckCharType     (DOSCALLS.843)
+ 0000:00000000  Imp  VioCreateLogFont     (DOSCALLS.828)
+ 0000:00000000  Imp  VioCreatePS          (DOSCALLS.824)
+ 0000:00000000  Imp  VioDeleteSetId       (DOSCALLS.825)
+ 0000:00000000  Imp  VioDeregister        (DOSCALLS.775)
+ 0000:00000000  Imp  VioDestroyPS         (DOSCALLS.829)
+ 0000:00000000  Imp  VioEndPopUp          (DOSCALLS.770)
+ 0000:00000000  Imp  VioGetAnsi           (DOSCALLS.772)
+ 0000:00000000  Imp  VioGetBuf            (DOSCALLS.800)
+ 0000:00000000  Imp  VioGetConfig         (DOSCALLS.814)
+ 0000:00000000  Imp  VioGetCP             (DOSCALLS.808)
+ 0000:00000000  Imp  VioGetCurPos         (DOSCALLS.778)
+ 0000:00000000  Imp  VioGetCurType        (DOSCALLS.796)
+ 0000:00000000  Imp  VioGetDeviceCellSize (DOSCALLS.826)
+ 0000:00000000  Imp  VioGetFont           (DOSCALLS.798)
+ 0000:00000000  Imp  VioGetMode           (DOSCALLS.790)
+ 0000:00000000  Imp  VioGetOrg            (DOSCALLS.827)
+ 0000:00000000  Imp  VioGetPhysBuf        (DOSCALLS.771)
+ 0000:00000000  Imp  VioGetPSAddress      (DOSCALLS.835)
+ 0000:00000000  Imp  VioGetState          (DOSCALLS.817)
+ 0000:00000000  Imp  VioGlobalReg         (DOSCALLS.838)
+ 0000:00000000  Imp  VioModeUndo          (DOSCALLS.804)
+ 0000:00000000  Imp  VioModeWait          (DOSCALLS.806)
+ 0000:00000000  Imp  VioPopUp             (DOSCALLS.780)
+ 0000:00000000  Imp  VioPrtSc             (DOSCALLS.777)
+ 0000:00000000  Imp  VioPrtScToggle       (DOSCALLS.818)
+ 0000:00000000  Imp  VioQueryFonts        (DOSCALLS.832)
+ 0000:00000000  Imp  VioQuerySetIds       (DOSCALLS.830)
+ 0000:00000000  Imp  VioReadCellStr       (DOSCALLS.793)
+ 0000:00000000  Imp  VioReadCharStr       (DOSCALLS.799)
+ 0000:00000000  Imp  VioRegister          (DOSCALLS.813)
+ 0000:00000000  Imp  VioSavRedrawUndo     (DOSCALLS.797)
+ 0000:00000000  Imp  VioSavRedrawWait     (DOSCALLS.794)
+ 0000:00000000  Imp  VioScrLock           (DOSCALLS.792)
+ 0000:00000000  Imp  VioScrollDn          (DOSCALLS.815)
+ 0000:00000000  Imp  VioScrollLf          (DOSCALLS.812)
+ 0000:00000000  Imp  VioScrollRt          (DOSCALLS.781)
+ 0000:00000000  Imp  VioScrollUp          (DOSCALLS.776)
+ 0000:00000000  Imp  VioScrUnLock         (DOSCALLS.787)
+ 0000:00000000  Imp  VioSetAnsi           (DOSCALLS.774)
+ 0000:00000000  Imp  VioSetCP             (DOSCALLS.810)
+ 0000:00000000  Imp  VioSetCurPos         (DOSCALLS.784)
+ 0000:00000000  Imp  VioSetCurType        (DOSCALLS.801)
+ 0000:00000000  Imp  VioSetDeviceCellSize (DOSCALLS.833)
+ 0000:00000000  Imp  VioSetFont           (DOSCALLS.802)
+ 0000:00000000  Imp  VioSetMode           (DOSCALLS.791)
+ 0000:00000000  Imp  VioSetOrg            (DOSCALLS.831)
+ 0000:00000000  Imp  VioSetState          (DOSCALLS.819)
+ 0000:00000000  Imp  VioShowBuf           (DOSCALLS.811)
+ 0000:00000000  Imp  VioShowPS            (DOSCALLS.834)
+ 0000:00000000  Imp  VioWrtCellStr        (DOSCALLS.779)
+ 0000:00000000  Imp  VioWrtCharStr        (DOSCALLS.782)
+ 0000:00000000  Imp  VioWrtCharStrAtt     (DOSCALLS.816)
+ 0000:00000000  Imp  VioWrtNAttr          (DOSCALLS.795)
+ 0000:00000000  Imp  VioWrtNCell          (DOSCALLS.820)
+ 0000:00000000  Imp  VioWrtNChar          (DOSCALLS.821)
+ 0000:00000000  Imp  VioWrtTTY            (DOSCALLS.788)
+ 0000:00000000  Imp  XVioCheckCharType    (DOSCALLS.840)
+ 0000:00000000  Imp  XVioCreateCA         (DOSCALLS.842)
+ 0000:00000000  Imp  XVioDestroyCA        (DOSCALLS.841)
+ 0000:00000000  Imp  XVioGetCAState       (DOSCALLS.844)
+ 0000:00000000  Imp  XVioSetCAState       (DOSCALLS.839)
+
+  Address         Publics by Value
+
+ 0000:00000000  Imp  VioModeUndo          (DOSCALLS.804)
+ 0000:00000000  Imp  VioCreatePS          (DOSCALLS.824)
+ 0000:00000000  Imp  VioModeWait          (DOSCALLS.806)
+ 0000:00000000  Imp  XVioCreateCA         (DOSCALLS.842)
+ 0000:00000000  Imp  VioGlobalReg         (DOSCALLS.838)
+ 0000:00000000  Imp  VioScrollLf          (DOSCALLS.812)
+ 0000:00000000  Imp  VioRegister          (DOSCALLS.813)
+ 0000:00000000  Imp  VioGetConfig         (DOSCALLS.814)
+ 0000:00000000  Imp  VioScrollDn          (DOSCALLS.815)
+ 0000:00000000  Imp  VioGetState          (DOSCALLS.817)
+ 0000:00000000  Imp  VioSetState          (DOSCALLS.819)
+ 0000:00000000  Imp  VioWrtNCell          (DOSCALLS.820)
+ 0000:00000000  Imp  VioWrtNChar          (DOSCALLS.821)
+ 0000:00000000  Imp  VioEndPopUp          (DOSCALLS.770)
+ 0000:00000000  Imp  VioScrollUp          (DOSCALLS.776)
+ 0000:00000000  Imp  VioGetCurPos         (DOSCALLS.778)
+ 0000:00000000  Imp  VioScrollRt          (DOSCALLS.781)
+ 0000:00000000  Imp  VioSetCurPos         (DOSCALLS.784)
+ 0000:00000000  Imp  VioScrUnLock         (DOSCALLS.787)
+ 0000:00000000  Imp  VioWrtNAttr          (DOSCALLS.795)
+ 0000:00000000  Imp  VioAssociate         (DOSCALLS.823)
+ 0000:00000000  Imp  VioDestroyPS         (DOSCALLS.829)
+ 0000:00000000  Imp  VioGetPhysBuf        (DOSCALLS.771)
+ 0000:00000000  Imp  VioDeregister        (DOSCALLS.775)
+ 0000:00000000  Imp  VioWrtCellStr        (DOSCALLS.779)
+ 0000:00000000  Imp  VioWrtCharStr        (DOSCALLS.782)
+ 0000:00000000  Imp  VioGetCurType        (DOSCALLS.796)
+ 0000:00000000  Imp  VioQueryFonts        (DOSCALLS.832)
+ 0000:00000000  Imp  VioSetCurType        (DOSCALLS.801)
+ 0000:00000000  Imp  XVioDestroyCA        (DOSCALLS.841)
+ 0000:00000000  Imp  VioDeleteSetId       (DOSCALLS.825)
+ 0000:00000000  Imp  VioReadCellStr       (DOSCALLS.793)
+ 0000:00000000  Imp  VioReadCharStr       (DOSCALLS.799)
+ 0000:00000000  Imp  VioPrtScToggle       (DOSCALLS.818)
+ 0000:00000000  Imp  XVioGetCAState       (DOSCALLS.844)
+ 0000:00000000  Imp  XVioSetCAState       (DOSCALLS.839)
+ 0000:00000000  Imp  VioQuerySetIds       (DOSCALLS.830)
+ 0000:00000000  Imp  DOS16GETMODNAME      (DOSCALLS.48)
+ 0000:00000000  Imp  VioCheckCharType     (DOSCALLS.843)
+ 0000:00000000  Imp  VioGetPSAddress      (DOSCALLS.835)
+ 0000:00000000  Imp  VioCreateLogFont     (DOSCALLS.828)
+ 0000:00000000  Imp  VioSavRedrawWait     (DOSCALLS.794)
+ 0000:00000000  Imp  VioSavRedrawUndo     (DOSCALLS.797)
+ 0000:00000000  Imp  VioWrtCharStrAtt     (DOSCALLS.816)
+ 0000:00000000  Imp  XVioCheckCharType    (DOSCALLS.840)
+ 0000:00000000  Imp  VioGetCP             (DOSCALLS.808)
+ 0000:00000000  Imp  VioSetCP             (DOSCALLS.810)
+ 0000:00000000  Imp  VioPrtSc             (DOSCALLS.777)
+ 0000:00000000  Imp  VioPopUp             (DOSCALLS.780)
+ 0000:00000000  Imp  VioGetBuf            (DOSCALLS.800)
+ 0000:00000000  Imp  VioGetOrg            (DOSCALLS.827)
+ 0000:00000000  Imp  VioSetOrg            (DOSCALLS.831)
+ 0000:00000000  Imp  VioShowPS            (DOSCALLS.834)
+ 0000:00000000  Imp  VioWrtTTY            (DOSCALLS.788)
+ 0000:00000000  Imp  VioGetAnsi           (DOSCALLS.772)
+ 0000:00000000  Imp  DOS16WRITE           (DOSCALLS.138)
+ 0000:00000000  Imp  VioSetAnsi           (DOSCALLS.774)
+ 0000:00000000  Imp  VioGetMode           (DOSCALLS.790)
+ 0000:00000000  Imp  VioSetMode           (DOSCALLS.791)
+ 0000:00000000  Imp  VioScrLock           (DOSCALLS.792)
+ 0000:00000000  Imp  VioGetFont           (DOSCALLS.798)
+ 0000:00000000  Imp  VioSetFont           (DOSCALLS.802)
+ 0000:00000000  Imp  VioGetDeviceCellSize (DOSCALLS.826)
+ 0000:00000000  Imp  VioSetDeviceCellSize (DOSCALLS.833)
+ 0000:00000000  Imp  VioShowBuf           (DOSCALLS.811)
+
+Program entry point at 0001:00000000

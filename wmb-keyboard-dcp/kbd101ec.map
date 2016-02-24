@@ -1,0 +1,28 @@
+
+ KBD101EC
+
+ Start         Length     Name                   Class
+ 0001:00000000 000000066H _TEXT                  CODE 32-bit
+ 0002:00000000 000001410H _DATA                  DATA 32-bit
+ 0002:00001410 000002000H STACK                  STACK 32-bit
+ 0002:00003410 000000008H _BSS                   BSS 32-bit
+
+ Origin   Group
+ 0000:0   FLAT
+ 0002:0   DGROUP
+
+  Address         Publics by Name
+
+ 0000:00000000  Imp  DOSCLOSE             (DOSCALLS.257)
+ 0000:00000000  Imp  DOSEXIT              (DOSCALLS.234)
+ 0000:00000000  Imp  DOSOPEN              (DOSCALLS.273)
+ 0000:00000000  Imp  DOSWRITE             (DOSCALLS.282)
+
+  Address         Publics by Value
+
+ 0000:00000000  Imp  DOSOPEN              (DOSCALLS.273)
+ 0000:00000000  Imp  DOSEXIT              (DOSCALLS.234)
+ 0000:00000000  Imp  DOSCLOSE             (DOSCALLS.257)
+ 0000:00000000  Imp  DOSWRITE             (DOSCALLS.282)
+
+Program entry point at 0001:00000000

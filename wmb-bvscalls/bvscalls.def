@@ -1,0 +1,14 @@
+library bvscalls
+description '@#W.M.Brul:0.20160215#@BVSCALLS'
+protmode
+
+exports
+  BvsGetPtrDrawName @1
+  BvsMain @3
+  BvsRedrawSize @4
+
+imports
+  BvsMain=DOSCALLS.845
+  BvsRedrawSize=DOSCALLS.846
+  BvsGetPtrDrawName=DOSCALLS.847
+

@@ -1,0 +1,61 @@
+library kbdcalls
+description '@#W.M.Brul:0.20160215#@KBDCALLS'
+protmode
+
+; exports according to http://home.clara.net/orac/os2/kbdcalls.htm
+; imports according to http://home.clara.net/orac/os2/doscalls.htm
+
+exports
+  KbdSetCustXt @1
+; KbdInit @2
+  KbdGetCp @3
+  KbdCharIn @4
+  KbdSetCp @5
+  KbdLoadInstance @6
+  KbdSynch @7
+  KbdRegister @8
+  KbdStringIn @9
+  KbdGetStatus @10
+  KbdSetStatus @11
+  KbdGetFocus @12
+  KbdFlushBuffer @13
+  KbdXlate @14
+  KbdSwitchFgnd @15
+  KbdShellInit @16
+  KbdClose @17
+  KbdFreeFocus @18
+  KbdFree @19
+  KbdDeRegister @20
+  KbdSetFgnd @21
+  KbdPeek @22
+  KbdOpen @23
+  KbdGetHWId @24
+; KbdSetHWId @25
+
+imports
+  KbdSetCustXt=DOSCALLS.745
+; KbdInit=DOSCALLS.746
+  KbdGetCp=DOSCALLS.747
+  KbdCharIn=DOSCALLS.748
+  KbdSetCp=DOSCALLS.749
+  KbdLoadInstance=DOSCALLS.750
+  KbdSynch=DOSCALLS.751
+  KbdRegister=DOSCALLS.752
+  KbdStringIn=DOSCALLS.753
+  KbdGetStatus=DOSCALLS.754
+  KbdSetStatus=DOSCALLS.755
+  KbdGetFocus=DOSCALLS.756
+  KbdFlushBuffer=DOSCALLS.757
+  KbdXlate=DOSCALLS.758
+  KbdSwitchFgnd=DOSCALLS.759
+  KbdShellInit=DOSCALLS.760
+  KbdClose=DOSCALLS.761
+  KbdFreeFocus=DOSCALLS.762
+  KbdFree=DOSCALLS.763
+  KbdDeRegister=DOSCALLS.764
+  KbdSetFgnd=DOSCALLS.765
+  KbdPeek=DOSCALLS.766
+  KbdOpen=DOSCALLS.767
+  KbdGetHWId=DOSCALLS.768
+; KbdSetHWId=DOSCALLS.769
+

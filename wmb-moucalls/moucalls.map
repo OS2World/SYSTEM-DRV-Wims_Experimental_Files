@@ -1,0 +1,105 @@
+
+ MOUCALLS
+
+ Start         Length     Name                   Class
+ 0001:00000000 000000039H _TEXT                  CODE 16-bit
+ 0002:00000000 000000107H _DATA                  DATA 16-bit
+
+ Origin   Group
+ 0002:0   DGROUP
+
+ Address       Export                  Alias
+
+ 0000:00000000 MouClose                MouClose
+ 0000:00000000 MouDeRegister           MouDeRegister
+ 0000:00000000 MouDrawPtr              MouDrawPtr
+ 0000:00000000 MouFlushQue             MouFlushQue
+ 0000:00000000 MouGetDevStatus         MouGetDevStatus
+ 0000:00000000 MouGetEventMask         MouGetEventMask
+ 0000:00000000 MouGetHotKey            MouGetHotKey
+ 0000:00000000 MouGetNumButtons        MouGetNumButtons
+ 0000:00000000 MouGetNumMickeys        MouGetNumMickeys
+ 0000:00000000 MouGetNumQueEl          MouGetNumQueEl
+ 0000:00000000 MouGetPtrPos            MouGetPtrPos
+ 0000:00000000 MouGetPtrShape          MouGetPtrShape
+ 0000:00000000 MouGetScaleFact         MouGetScaleFact
+ 0000:00000000 MouGetThreshold         MouGetThreshold
+ 0000:00000000 MouInitReal             MouInitReal
+ 0000:00000000 MouOpen                 MouOpen
+ 0000:00000000 MouReadEventQue         MouReadEventQue
+ 0000:00000000 MouRegister             MouRegister
+ 0000:00000000 MouRemovePtr            MouRemovePtr
+ 0000:00000000 MouSetDevStatus         MouSetDevStatus
+ 0000:00000000 MouSetEventMask         MouSetEventMask
+ 0000:00000000 MouSetHotKey            MouSetHotKey
+ 0000:00000000 MouSetPtrPos            MouSetPtrPos
+ 0000:00000000 MouSetPtrShape          MouSetPtrShape
+ 0000:00000000 MouSetScaleFact         MouSetScaleFact
+ 0000:00000000 MouSetThreshold         MouSetThreshold
+ 0000:00000000 MouSynch                MouSynch
+
+  Address         Publics by Name
+
+ 0000:00000000  Imp  DOS16GETMODNAME      (DOSCALLS.48)
+ 0000:00000000  Imp  DOS16WRITE           (DOSCALLS.138)
+ 0000:00000000  Imp  MouClose             (DOSCALLS.727)
+ 0000:00000000  Imp  MouDeRegister        (DOSCALLS.731)
+ 0000:00000000  Imp  MouDrawPtr           (DOSCALLS.743)
+ 0000:00000000  Imp  MouFlushQue          (DOSCALLS.725)
+ 0000:00000000  Imp  MouGetDevStatus      (DOSCALLS.739)
+ 0000:00000000  Imp  MouGetEventMask      (DOSCALLS.732)
+ 0000:00000000  Imp  MouGetHotKey         (DOSCALLS.853)
+ 0000:00000000  Imp  MouGetNumButtons     (DOSCALLS.726)
+ 0000:00000000  Imp  MouGetNumMickeys     (DOSCALLS.721)
+ 0000:00000000  Imp  MouGetNumQueEl       (DOSCALLS.730)
+ 0000:00000000  Imp  MouGetPtrPos         (DOSCALLS.736)
+ 0000:00000000  Imp  MouGetPtrShape       (DOSCALLS.719)
+ 0000:00000000  Imp  MouGetScaleFact      (DOSCALLS.724)
+ 0000:00000000  Imp  MouGetThreshold      (DOSCALLS.722)
+ 0000:00000000  Imp  MouInitReal          (DOSCALLS.744)
+ 0000:00000000  Imp  MouOpen              (DOSCALLS.734)
+ 0000:00000000  Imp  MouReadEventQue      (DOSCALLS.737)
+ 0000:00000000  Imp  MouRegister          (DOSCALLS.741)
+ 0000:00000000  Imp  MouRemovePtr         (DOSCALLS.735)
+ 0000:00000000  Imp  MouSetDevStatus      (DOSCALLS.742)
+ 0000:00000000  Imp  MouSetEventMask      (DOSCALLS.733)
+ 0000:00000000  Imp  MouSetHotKey         (DOSCALLS.854)
+ 0000:00000000  Imp  MouSetPtrPos         (DOSCALLS.738)
+ 0000:00000000  Imp  MouSetPtrShape       (DOSCALLS.720)
+ 0000:00000000  Imp  MouSetScaleFact      (DOSCALLS.729)
+ 0000:00000000  Imp  MouSetThreshold      (DOSCALLS.728)
+ 0000:00000000  Imp  MouSynch             (DOSCALLS.740)
+
+  Address         Publics by Value
+
+ 0000:00000000  Imp  MouRegister          (DOSCALLS.741)
+ 0000:00000000  Imp  MouInitReal          (DOSCALLS.744)
+ 0000:00000000  Imp  MouGetHotKey         (DOSCALLS.853)
+ 0000:00000000  Imp  MouFlushQue          (DOSCALLS.725)
+ 0000:00000000  Imp  MouSetHotKey         (DOSCALLS.854)
+ 0000:00000000  Imp  MouRemovePtr         (DOSCALLS.735)
+ 0000:00000000  Imp  MouGetPtrPos         (DOSCALLS.736)
+ 0000:00000000  Imp  MouSetPtrPos         (DOSCALLS.738)
+ 0000:00000000  Imp  MouDeRegister        (DOSCALLS.731)
+ 0000:00000000  Imp  MouGetPtrShape       (DOSCALLS.719)
+ 0000:00000000  Imp  MouSetPtrShape       (DOSCALLS.720)
+ 0000:00000000  Imp  MouGetNumQueEl       (DOSCALLS.730)
+ 0000:00000000  Imp  DOS16GETMODNAME      (DOSCALLS.48)
+ 0000:00000000  Imp  MouReadEventQue      (DOSCALLS.737)
+ 0000:00000000  Imp  MouGetScaleFact      (DOSCALLS.724)
+ 0000:00000000  Imp  MouSetScaleFact      (DOSCALLS.729)
+ 0000:00000000  Imp  MouGetEventMask      (DOSCALLS.732)
+ 0000:00000000  Imp  MouSetEventMask      (DOSCALLS.733)
+ 0000:00000000  Imp  MouGetThreshold      (DOSCALLS.722)
+ 0000:00000000  Imp  MouSetThreshold      (DOSCALLS.728)
+ 0000:00000000  Imp  MouGetDevStatus      (DOSCALLS.739)
+ 0000:00000000  Imp  MouSetDevStatus      (DOSCALLS.742)
+ 0000:00000000  Imp  MouGetNumMickeys     (DOSCALLS.721)
+ 0000:00000000  Imp  MouGetNumButtons     (DOSCALLS.726)
+ 0000:00000000  Imp  MouOpen              (DOSCALLS.734)
+ 0000:00000000  Imp  MouSynch             (DOSCALLS.740)
+ 0000:00000000  Imp  MouClose             (DOSCALLS.727)
+ 0000:00000000  Imp  DOS16WRITE           (DOSCALLS.138)
+ 0000:00000000  Imp  MouDrawPtr           (DOSCALLS.743)
+
+Program entry point at 0001:00000000

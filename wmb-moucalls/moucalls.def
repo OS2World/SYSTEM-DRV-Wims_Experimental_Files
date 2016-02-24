@@ -1,0 +1,69 @@
+library moucalls
+description '@#W.M.Brul:0.20160215#@MOUCALLS'
+protmode
+
+; exports according to http://home.clara.net/orac/os2/moucalls.htm
+; imports according to http://home.clara.net/orac/os2/doscalls.htm
+
+exports
+  MouGetPtrShape @1
+  MouSetPtrShape @2
+  MouGetNumMickeys @3
+  MouGetHotKey @4
+; MouShellInit @5
+  MouGetScaleFact @6
+  MouFlushQue @7
+  MouGetNumButtons @8
+  MouClose @9
+  MouSetHotKey @10
+  MouSetScaleFact @11
+; MouFree @12
+  MouGetNumQueEl @13
+  MouDeRegister @14
+  MouGetEventMask @15
+  MouSetEventMask @16
+  MouOpen @17
+  MouRemovePtr @18
+  MouGetPtrPos @19
+  MouReadEventQue @20
+  MouSetPtrPos @21
+  MouGetDevStatus @22
+  MouSynch @23
+  MouRegister @24
+  MouSetDevStatus @25
+  MouDrawPtr @26
+  MouInitReal @27
+  MouGetThreshold @29
+  MouSetThreshold @30
+
+imports
+  MouGetPtrShape=DOSCALLS.719
+  MouSetPtrShape=DOSCALLS.720
+  MouGetNumMickeys=DOSCALLS.721
+  MouGetThreshold=DOSCALLS.722
+; MouShellInit=DOSCALLS.723
+  MouGetScaleFact=DOSCALLS.724
+  MouFlushQue=DOSCALLS.725
+  MouGetNumButtons=DOSCALLS.726
+  MouClose=DOSCALLS.727
+  MouSetThreshold=DOSCALLS.728
+  MouSetScaleFact=DOSCALLS.729
+  MouGetNumQueEl=DOSCALLS.730
+  MouDeRegister=DOSCALLS.731
+  MouGetEventMask=DOSCALLS.732
+  MouSetEventMask=DOSCALLS.733
+  MouOpen=DOSCALLS.734
+  MouRemovePtr=DOSCALLS.735
+  MouGetPtrPos=DOSCALLS.736
+  MouReadEventQue=DOSCALLS.737
+  MouSetPtrPos=DOSCALLS.738
+  MouGetDevStatus=DOSCALLS.739
+  MouSynch=DOSCALLS.740
+  MouRegister=DOSCALLS.741
+  MouSetDevStatus=DOSCALLS.742
+  MouDrawPtr=DOSCALLS.743
+  MouInitReal=DOSCALLS.744
+; MouFree=DOSCALLS.?
+  MouGetHotKey=DOSCALLS.853
+  MouSetHotKey=DOSCALLS.854
+
