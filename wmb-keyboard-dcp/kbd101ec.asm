@@ -39,7 +39,7 @@ struc entry
 ; index table entry
 sf dw ? ; size/linkage flags
 cc dw ? ; country/language code
-cs db '101 ' ; country suffix
+cs db '104 ' ; country suffix
 w1 dw 1 dup(0) ; reserved
 cp dw ? ; code page number
 kt dw 1 ; enhanced keyboard
@@ -48,7 +48,7 @@ ends entry
 
 dataseg
 dcpStart dd dcpCount-dcpStart
-vendor db '@#W.M.Brul:0.20160224#@kbd101ec.dcp',0
+vendor db '@#W.M.Brul:1.20160229#@kbd101ec.dcp',0
 dcpCount dw (dcpEmpty-Entry1)/18 ; index entries
 Entry1 entry {sf=12h,cc='BR',cs='274',cp=437,ho=Table1-dcpStart}
 Entry2 entry {sf=00h,cc='BR',cs='274',cp=850,ho=Table2-dcpStart}
@@ -66,7 +66,7 @@ ec dw 127 ; xlate table entry count
 ew dw 7 ; xlate table entry width
 cc dw ? ; country/language code
 tt dw 1 ; xlate table type OS/2
-cs db '101 ' ; country suffix
+cs db '104 ' ; country suffix
 w8 dw 8 dup(0) ; reserved
 ends header
 
@@ -78,7 +78,7 @@ include 'kbd274br.inc'
 Table2 header {cp=850,cc='BR',cs='274',tf=54h}
 include 'kbd274br.inc'
 ; default us103 table for codepage 437
-Table3 header {cp=437,cc='BR',cs='103',tf=10h}
+Table3 header {cp=437,cc='US',cs='103',tf=10h}
 include 'kbd103us.inc'
 ; default us103 table for codepage 850
 Table4 header {cp=850,cc='US',cs='103',tf=14h}

@@ -1,4 +1,4 @@
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 1
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 1
 kbd101ec.asm
 
 
@@ -60,7 +60,7 @@ kbd101ec.asm
      55					 ; return result and exit
      56					   call	DosExit	c,1,eax
 1    57	0000005B  50				 PUSH	 EAX
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 2
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 2
 kbd101ec.asm
 
 
@@ -74,7 +74,7 @@ kbd101ec.asm
      64					 ; index table entry
      65	00000000  01*(????)		 sf dw ? ; size/linkage	flags
      66	00000002  01*(????)		 cc dw ? ; country/language code
-     67	00000004  01*(31 30 31 20)	 cs db '101 ' ;	country	suffix
+     67	00000004  01*(31 30 34 20)	 cs db '104 ' ;	country	suffix
      68	00000008  01*(01*(0000))	 w1 dw 1 dup(0)	; reserved
      69	0000000A  01*(????)		 cp dw ? ; code	page number
      70	0000000C  01*(0001)		 kt dw 1 ; enhanced keyboard
@@ -83,9 +83,9 @@ kbd101ec.asm
      73
      74	00000066			 dataseg
      75	00000010  00000028		 dcpStart dd dcpCount-dcpStart
-     76	00000014  40 23	57 2E 4D 2E 42+	 vendor	db '@#W.M.Brul:0.20160224#@kbd101ec.dcp',0
-     77		  72 75	6C 3A 30 2E 32+
-     78		  30 31	36 30 32 32 34+
+     76	00000014  40 23	57 2E 4D 2E 42+	 vendor	db '@#W.M.Brul:1.20160229#@kbd101ec.dcp',0
+     77		  72 75	6C 3A 31 2E 32+
+     78		  30 31	36 30 32 32 39+
      79		  23 40	6B 62 64 31 30+
      80		  31 65	63 2E 64 63 70+
      81		  00
@@ -114,7 +114,7 @@ kbd101ec.asm
     104	0000000E  01*(0007)		 ew dw 7 ; xlate table entry width
     105	00000010  01*(????)		 cc dw ? ; country/language code
     106	00000012  01*(0001)		 tt dw 1 ; xlate table type OS/2
-    107	00000014  01*(31 30 31 20)	 cs db '101 ' ;	country	suffix
+    107	00000014  01*(31 30 34 20)	 cs db '104 ' ;	country	suffix
     108	00000018  01*(08*(0000))	 w8 dw 8 dup(0)	; reserved
     109	00000028			 ends header
     110
@@ -122,7 +122,7 @@ kbd101ec.asm
     112					 ; default br274 table for codepage 437
     113	00000084  01B5 00000050	      +	 Table1	header {cp=437,cc='BR',cs='274',tf=50h}
     114		  00000001 04E3	007F  +
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 3
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 3
 kbd101ec.asm
 
 
@@ -184,7 +184,7 @@ kbd101ec.asm
 1   169	00000211  04 00	2E 3E 00 00 00	   db 04h,00h,'.','>',00h,00h,00h ; ScanCode:34h <.,>>
 1   170	00000218  04 00	2F 3F 00 00 00	   db 04h,00h,'/','?',00h,00h,00h ; ScanCode:35h </,?>
 1   171	0000021F  0C 00	01 00 00 00 00	   db 0Ch,00h,01h,00h,00h,00h,00h ; ScanCode:36h <shift-right>
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 4
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 4
 kbd101ec.asm
 
 
@@ -219,54 +219,54 @@ kbd101ec.asm
 1   199	000002E3  07 00	0B 30 00 00 00	   db 07h,00h,0Bh,'0',00h,00h,00h ; ScanCode:52h <keypad><0,ins>
 1   200	000002EA  07 00	0C 2E 00 00 00	   db 07h,00h,0Ch,'.',00h,00h,00h ; ScanCode:53h <keypad><.,del>
 1   201	000002F1  0A 00	00 80 80 00 00	   db 0Ah,00h,00h,80h,80h,00h,00h ; ScanCode:54h <alt><sysrq>
-1   202	000002F8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:55h
-1   203	000002FF  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:56h
+1   202	000002F8  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:55h
+1   203	000002FF  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:56h
 1   204	00000306  06 00	0B 00 00 00 00	   db 06h,00h,011,00h,00h,00h,00h ; ScanCode:57h <F11>
 1   205	0000030D  06 00	0C 00 00 00 00	   db 06h,00h,012,00h,00h,00h,00h ; ScanCode:58h <F12>
-1   206	00000314  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:59h
-1   207	0000031B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
-1   208	00000322  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
-1   209	00000329  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
-1   210	00000330  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
-1   211	00000337  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
-1   212	0000033E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
-1   213	00000345  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:60h
-1   214	0000034C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:61h
-1   215	00000353  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:62h
-1   216	0000035A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:63h
-1   217	00000361  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:64h
-1   218	00000368  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:65h
-1   219	0000036F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:66h
-1   220	00000376  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:67h
-1   221	0000037D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:68h
-1   222	00000384  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:69h
-1   223	0000038B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
-1   224	00000392  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
-1   225	00000399  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
-1   226	000003A0  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
-1   227	000003A7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
-1   228	000003AE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 5
+1   206	00000314  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:59h
+1   207	0000031B  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
+1   208	00000322  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
+1   209	00000329  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
+1   210	00000330  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
+1   211	00000337  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
+1   212	0000033E  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
+1   213	00000345  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:60h
+1   214	0000034C  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:61h
+1   215	00000353  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:62h
+1   216	0000035A  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:63h
+1   217	00000361  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:64h
+1   218	00000368  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:65h
+1   219	0000036F  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:66h
+1   220	00000376  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:67h
+1   221	0000037D  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:68h
+1   222	00000384  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:69h
+1   223	0000038B  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
+1   224	00000392  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
+1   225	00000399  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
+1   226	000003A0  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
+1   227	000003A7  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
+1   228	000003AE  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 5
 kbd101ec.asm
 
 
 
-1   229	000003B5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:70h
-1   230	000003BC  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:71h
-1   231	000003C3  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:72h
-1   232	000003CA  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:73h
-1   233	000003D1  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:74h
-1   234	000003D8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:75h
-1   235	000003DF  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:76h
-1   236	000003E6  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:77h
-1   237	000003ED  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:78h
-1   238	000003F4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:79h
-1   239	000003FB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
-1   240	00000402  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
-1   241	00000409  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
-1   242	00000410  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
-1   243	00000417  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
-1   244	0000041E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
+1   229	000003B5  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:70h
+1   230	000003BC  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:71h
+1   231	000003C3  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:72h
+1   232	000003CA  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:73h
+1   233	000003D1  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:74h
+1   234	000003D8  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:75h
+1   235	000003DF  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:76h
+1   236	000003E6  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:77h
+1   237	000003ED  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:78h
+1   238	000003F4  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:79h
+1   239	000003FB  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
+1   240	00000402  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
+1   241	00000409  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
+1   242	00000410  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
+1   243	00000417  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
+1   244	0000041E  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
 1   245					 ; AccentEntry:02h
 1   246	00000425  60 29	04*(00)		   db '`',29h,4	dup(0) ; <accent><scancode>
 1   247	0000042B  61 85	65 8A 69 8D 6F+	   db 'a','Ö','e','ä','i','ç','o','ï','u','ó'
@@ -308,7 +308,7 @@ kbd101ec.asm
     283					 ; default br274 table for codepage 850
     284	00000567  0352 00000054	      +	 Table2	header {cp=850,cc='BR',cs='274',tf=54h}
     285		  00000001 04E3	007F  +
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 6
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 6
 kbd101ec.asm
 
 
@@ -370,7 +370,7 @@ kbd101ec.asm
 1   340	000006F4  04 00	2E 3E 00 00 00	   db 04h,00h,'.','>',00h,00h,00h ; ScanCode:34h <.,>>
 1   341	000006FB  04 00	2F 3F 00 00 00	   db 04h,00h,'/','?',00h,00h,00h ; ScanCode:35h </,?>
 1   342	00000702  0C 00	01 00 00 00 00	   db 0Ch,00h,01h,00h,00h,00h,00h ; ScanCode:36h <shift-right>
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 7
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 7
 kbd101ec.asm
 
 
@@ -405,54 +405,54 @@ kbd101ec.asm
 1   370	000007C6  07 00	0B 30 00 00 00	   db 07h,00h,0Bh,'0',00h,00h,00h ; ScanCode:52h <keypad><0,ins>
 1   371	000007CD  07 00	0C 2E 00 00 00	   db 07h,00h,0Ch,'.',00h,00h,00h ; ScanCode:53h <keypad><.,del>
 1   372	000007D4  0A 00	00 80 80 00 00	   db 0Ah,00h,00h,80h,80h,00h,00h ; ScanCode:54h <alt><sysrq>
-1   373	000007DB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:55h
-1   374	000007E2  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:56h
+1   373	000007DB  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:55h
+1   374	000007E2  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:56h
 1   375	000007E9  06 00	0B 00 00 00 00	   db 06h,00h,011,00h,00h,00h,00h ; ScanCode:57h <F11>
 1   376	000007F0  06 00	0C 00 00 00 00	   db 06h,00h,012,00h,00h,00h,00h ; ScanCode:58h <F12>
-1   377	000007F7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:59h
-1   378	000007FE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
-1   379	00000805  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
-1   380	0000080C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
-1   381	00000813  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
-1   382	0000081A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
-1   383	00000821  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
-1   384	00000828  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:60h
-1   385	0000082F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:61h
-1   386	00000836  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:62h
-1   387	0000083D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:63h
-1   388	00000844  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:64h
-1   389	0000084B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:65h
-1   390	00000852  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:66h
-1   391	00000859  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:67h
-1   392	00000860  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:68h
-1   393	00000867  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:69h
-1   394	0000086E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
-1   395	00000875  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
-1   396	0000087C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
-1   397	00000883  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
-1   398	0000088A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
-1   399	00000891  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 8
+1   377	000007F7  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:59h
+1   378	000007FE  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
+1   379	00000805  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
+1   380	0000080C  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
+1   381	00000813  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
+1   382	0000081A  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
+1   383	00000821  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
+1   384	00000828  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:60h
+1   385	0000082F  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:61h
+1   386	00000836  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:62h
+1   387	0000083D  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:63h
+1   388	00000844  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:64h
+1   389	0000084B  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:65h
+1   390	00000852  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:66h
+1   391	00000859  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:67h
+1   392	00000860  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:68h
+1   393	00000867  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:69h
+1   394	0000086E  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
+1   395	00000875  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
+1   396	0000087C  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
+1   397	00000883  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
+1   398	0000088A  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
+1   399	00000891  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 8
 kbd101ec.asm
 
 
 
-1   400	00000898  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:70h
-1   401	0000089F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:71h
-1   402	000008A6  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:72h
-1   403	000008AD  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:73h
-1   404	000008B4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:74h
-1   405	000008BB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:75h
-1   406	000008C2  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:76h
-1   407	000008C9  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:77h
-1   408	000008D0  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:78h
-1   409	000008D7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:79h
-1   410	000008DE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
-1   411	000008E5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
-1   412	000008EC  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
-1   413	000008F3  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
-1   414	000008FA  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
-1   415	00000901  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
+1   400	00000898  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:70h
+1   401	0000089F  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:71h
+1   402	000008A6  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:72h
+1   403	000008AD  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:73h
+1   404	000008B4  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:74h
+1   405	000008BB  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:75h
+1   406	000008C2  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:76h
+1   407	000008C9  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:77h
+1   408	000008D0  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:78h
+1   409	000008D7  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:79h
+1   410	000008DE  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
+1   411	000008E5  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
+1   412	000008EC  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
+1   413	000008F3  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
+1   414	000008FA  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
+1   415	00000901  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
 1   416					 ; AccentEntry:02h
 1   417	00000908  60 29	04*(00)		   db '`',29h,4	dup(0) ; <accent><scancode>
 1   418	0000090E  61 85	65 8A 69 8D 6F+	   db 'a','Ö','e','ä','i','ç','o','ï','u','ó'
@@ -492,14 +492,14 @@ kbd101ec.asm
 1   452	00000A1C  2E*(00)		   db 46 dup(0)	; <unused>
 1   453
     454					 ; default us103 table for codepage 437
-    455	00000A4A  01B5 00000010	      +	 Table3	header {cp=437,cc='BR',cs='103',tf=10h}
+    455	00000A4A  01B5 00000010	      +	 Table3	header {cp=437,cc='US',cs='103',tf=10h}
     456		  00000001 04E3	007F  +
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 9
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 9
 kbd101ec.asm
 
 
 
-    457		  0007 4252 0001 31 30+
+    457		  0007 5553 0001 31 30+
     458		  33 20	08*(0000)
     459					 include 'kbd103us.inc'
 1   460	00000A72  08 00	1B 1B 00 00 00	   db 08h,00h,1Bh,1Bh,00h,00h,00h ; ScanCode:01h <escape>
@@ -556,7 +556,7 @@ kbd101ec.asm
 1   511	00000BD7  04 00	2E 3E 00 00 00	   db 04h,00h,'.','>',00h,00h,00h ; ScanCode:34h <.,>>
 1   512	00000BDE  04 00	2F 3F 00 00 00	   db 04h,00h,'/','?',00h,00h,00h ; ScanCode:35h </,?>
 1   513	00000BE5  0C 00	01 00 00 00 00	   db 0Ch,00h,01h,00h,00h,00h,00h ; ScanCode:36h <shift-right>
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 10
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 10
 kbd101ec.asm
 
 
@@ -591,54 +591,54 @@ kbd101ec.asm
 1   541	00000CA9  07 00	0B 30 00 00 00	   db 07h,00h,0Bh,'0',00h,00h,00h ; ScanCode:52h <keypad><0,ins>
 1   542	00000CB0  07 00	0C 2E 00 00 00	   db 07h,00h,0Ch,'.',00h,00h,00h ; ScanCode:53h <keypad><.,del>
 1   543	00000CB7  0A 00	00 80 80 00 00	   db 0Ah,00h,00h,80h,80h,00h,00h ; ScanCode:54h <alt><sysrq>
-1   544	00000CBE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:55h
-1   545	00000CC5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:56h
+1   544	00000CBE  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:55h
+1   545	00000CC5  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:56h
 1   546	00000CCC  06 00	0B 00 00 00 00	   db 06h,00h,011,00h,00h,00h,00h ; ScanCode:57h <F11>
 1   547	00000CD3  06 00	0C 00 00 00 00	   db 06h,00h,012,00h,00h,00h,00h ; ScanCode:58h <F12>
-1   548	00000CDA  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:59h
-1   549	00000CE1  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
-1   550	00000CE8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
-1   551	00000CEF  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
-1   552	00000CF6  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
-1   553	00000CFD  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
-1   554	00000D04  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
-1   555	00000D0B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:60h
-1   556	00000D12  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:61h
-1   557	00000D19  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:62h
-1   558	00000D20  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:63h
-1   559	00000D27  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:64h
-1   560	00000D2E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:65h
-1   561	00000D35  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:66h
-1   562	00000D3C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:67h
-1   563	00000D43  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:68h
-1   564	00000D4A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:69h
-1   565	00000D51  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
-1   566	00000D58  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
-1   567	00000D5F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
-1   568	00000D66  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
-1   569	00000D6D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
-1   570	00000D74  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 11
+1   548	00000CDA  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:59h
+1   549	00000CE1  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
+1   550	00000CE8  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
+1   551	00000CEF  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
+1   552	00000CF6  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
+1   553	00000CFD  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
+1   554	00000D04  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
+1   555	00000D0B  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:60h
+1   556	00000D12  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:61h
+1   557	00000D19  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:62h
+1   558	00000D20  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:63h
+1   559	00000D27  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:64h
+1   560	00000D2E  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:65h
+1   561	00000D35  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:66h
+1   562	00000D3C  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:67h
+1   563	00000D43  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:68h
+1   564	00000D4A  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:69h
+1   565	00000D51  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
+1   566	00000D58  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
+1   567	00000D5F  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
+1   568	00000D66  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
+1   569	00000D6D  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
+1   570	00000D74  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 11
 kbd101ec.asm
 
 
 
-1   571	00000D7B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:70h
-1   572	00000D82  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:71h
-1   573	00000D89  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:72h
-1   574	00000D90  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:73h
-1   575	00000D97  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:74h
-1   576	00000D9E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:75h
-1   577	00000DA5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:76h
-1   578	00000DAC  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:77h
-1   579	00000DB3  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:78h
-1   580	00000DBA  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:79h
-1   581	00000DC1  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
-1   582	00000DC8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
-1   583	00000DCF  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
-1   584	00000DD6  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
-1   585	00000DDD  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
-1   586	00000DE4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
+1   571	00000D7B  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:70h
+1   572	00000D82  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:71h
+1   573	00000D89  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:72h
+1   574	00000D90  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:73h
+1   575	00000D97  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:74h
+1   576	00000D9E  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:75h
+1   577	00000DA5  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:76h
+1   578	00000DAC  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:77h
+1   579	00000DB3  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:78h
+1   580	00000DBA  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:79h
+1   581	00000DC1  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
+1   582	00000DC8  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
+1   583	00000DCF  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
+1   584	00000DD6  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
+1   585	00000DDD  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
+1   586	00000DE4  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
 1   587					 ; unused accent table
 1   588	00000DEB  0142*(00)		   db 7*46 dup(0)
 1   589
@@ -680,7 +680,7 @@ kbd101ec.asm
 1   625	00001020  01 00	61 41 00 00 00	   db 01h,00h,'a','A',00h,00h,00h ; ScanCode:1Eh <a,A>
 1   626	00001027  01 00	73 53 00 00 00	   db 01h,00h,'s','S',00h,00h,00h ; ScanCode:1Fh <s,S>
 1   627	0000102E  01 00	64 44 00 00 00	   db 01h,00h,'d','D',00h,00h,00h ; ScanCode:20h <d,D>
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 12
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 12
 kbd101ec.asm
 
 
@@ -737,61 +737,61 @@ kbd101ec.asm
 1   677	0000118C  07 00	0B 30 00 00 00	   db 07h,00h,0Bh,'0',00h,00h,00h ; ScanCode:52h <keypad><0,ins>
 1   678	00001193  07 00	0C 2E 00 00 00	   db 07h,00h,0Ch,'.',00h,00h,00h ; ScanCode:53h <keypad><.,del>
 1   679	0000119A  0A 00	00 80 80 00 00	   db 0Ah,00h,00h,80h,80h,00h,00h ; ScanCode:54h <alt><sysrq>
-1   680	000011A1  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:55h
-1   681	000011A8  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:56h
+1   680	000011A1  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:55h
+1   681	000011A8  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:56h
 1   682	000011AF  06 00	0B 00 00 00 00	   db 06h,00h,011,00h,00h,00h,00h ; ScanCode:57h <F11>
 1   683	000011B6  06 00	0C 00 00 00 00	   db 06h,00h,012,00h,00h,00h,00h ; ScanCode:58h <F12>
-1   684	000011BD  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:59h
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 13
+1   684	000011BD  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:59h
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 13
 kbd101ec.asm
 
 
 
-1   685	000011C4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
-1   686	000011CB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
-1   687	000011D2  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
-1   688	000011D9  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
-1   689	000011E0  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
-1   690	000011E7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
-1   691	000011EE  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:60h
-1   692	000011F5  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:61h
-1   693	000011FC  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:62h
-1   694	00001203  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:63h
-1   695	0000120A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:64h
-1   696	00001211  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:65h
-1   697	00001218  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:66h
-1   698	0000121F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:67h
-1   699	00001226  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:68h
-1   700	0000122D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:69h
-1   701	00001234  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
-1   702	0000123B  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
-1   703	00001242  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
-1   704	00001249  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
-1   705	00001250  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
-1   706	00001257  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
-1   707	0000125E  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:70h
-1   708	00001265  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:71h
-1   709	0000126C  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:72h
-1   710	00001273  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:73h
-1   711	0000127A  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:74h
-1   712	00001281  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:75h
-1   713	00001288  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:76h
-1   714	0000128F  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:77h
-1   715	00001296  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:78h
-1   716	0000129D  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:79h
-1   717	000012A4  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
-1   718	000012AB  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
-1   719	000012B2  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
-1   720	000012B9  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
-1   721	000012C0  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
-1   722	000012C7  00 00	00 00 00 00 00	   db 00h,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
+1   685	000011C4  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Ah
+1   686	000011CB  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Bh
+1   687	000011D2  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Ch
+1   688	000011D9  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Dh
+1   689	000011E0  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Eh
+1   690	000011E7  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:5Fh
+1   691	000011EE  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:60h
+1   692	000011F5  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:61h
+1   693	000011FC  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:62h
+1   694	00001203  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:63h
+1   695	0000120A  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:64h
+1   696	00001211  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:65h
+1   697	00001218  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:66h
+1   698	0000121F  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:67h
+1   699	00001226  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:68h
+1   700	0000122D  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:69h
+1   701	00001234  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Ah
+1   702	0000123B  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Bh
+1   703	00001242  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Ch
+1   704	00001249  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Dh
+1   705	00001250  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Eh
+1   706	00001257  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:6Fh
+1   707	0000125E  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:70h
+1   708	00001265  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:71h
+1   709	0000126C  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:72h
+1   710	00001273  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:73h
+1   711	0000127A  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:74h
+1   712	00001281  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:75h
+1   713	00001288  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:76h
+1   714	0000128F  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:77h
+1   715	00001296  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:78h
+1   716	0000129D  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:79h
+1   717	000012A4  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Ah
+1   718	000012AB  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Bh
+1   719	000012B2  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Ch
+1   720	000012B9  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Dh
+1   721	000012C0  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Eh
+1   722	000012C7  1A 00	00 00 00 00 00	   db 1Ah,00h,00h,00h,00h,00h,00h ; ScanCode:7Fh
 1   723					 ; unused accent table
 1   724	000012CE  0142*(00)		   db 7*46 dup(0)
 1   725
     726		  =1400			 dcpTotal=$-dcpStart
     727
     728					 end MainRoutine
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 14
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 14
 Symbol Table
 
 
@@ -799,9 +799,9 @@ Symbol Table
 
 Symbol Name			  Type	 Value
 
-??DATE				  Text	 "24-02-16"
+??DATE				  Text	 "29-02-16"
 ??FILENAME			  Text	 "kbd101ec"
-??TIME				  Text	 "18:51:03"
+??TIME				  Text	 "15:43:46"
 ??VERSION			  Number 0401
 @32BIT				  Text	 1
 @@ARG				  Number [FLAT:EBP+0014]
@@ -853,7 +853,7 @@ ENTRY
  CP				  Word	 000A
  KT				  Word	 000C
  HO				  Dword	 000E
-Turbo Assembler	 Version 4.1	    24-02-16 18:51:03	    Page 15
+Turbo Assembler	 Version 4.1	    29-02-16 15:43:46	    Page 15
 Symbol Table
 
 
