@@ -1,0 +1,605 @@
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 1
+cty593ec.asm
+
+
+
+      1					 .386p
+      2	00000000			 model flat
+      3					 ideal
+      4
+      5					 extrn DosClose:near
+      6					 extrn DosExit:near
+      7					 extrn DosOpen:near
+      8					 extrn DosWrite:near
+      9
+     10	00000000			 stack 8192
+     11
+     12	00002000			 dataseg
+     13	00000000  63 74	79 35 39 33 65+	 szOutput db 'cty593ec.sys'
+     14		  63 2E	73 79 73
+     15	0000000C  00000000		 fhOutput dd 0
+     16
+     17	00000010			 udataseg
+     18	00000000  ????????		 ActionTaken dd	?
+     19	00000004  ????????		 BytesDone dd ?
+     20
+     21	00000008			 codeseg
+     22	00000000			 proc MainRoutine c near
+     23					 arg @@Mod,@@Nul,@@Env,@@Arg
+     24					 ; open	default	code page file
+1    25	00000000  C8 0000 00			 ENTERD	 00000h,0
+1    26					   call	DosOpen	c,offset(szOutput),offset(fhOutput),offset(ActionTaken),0,0,012h,0191h,0
+2    27	00000004  6A 00				 PUSH	 0
+2    28	00000006  68 00000191			 PUSH	 0191H
+2    29	0000000B  6A 12				 PUSH	 012H
+2    30	0000000D  6A 00				 PUSH	 0
+2    31	0000000F  6A 00				 PUSH	 0
+2    32	00000011  68 00000000r			 PUSH	 OFFSET(ACTIONTAKEN)
+2    33	00000016  68 0000000Cr			 PUSH	 OFFSET(FHOUTPUT)
+2    34	0000001B  68 00000000r			 PUSH	 OFFSET(SZOUTPUT)
+2    35	00000020  E8 00000000e			 CALL	 DOSOPEN
+2    36	00000025  83 C4	20			 ADD	 ESP,00020h
+     37	00000028  85 C0			   test	eax,eax	; return code
+     38	0000002A  75 2F			   jnz ReportResult ; error
+     39					 ; write default code page file
+     40					   call	DosWrite c,[fhOutput],offset(sysStart),sysTotal,offset(BytesDone)
+1    41	0000002C  68 00000004r			 PUSH	 OFFSET(BYTESDONE)
+1    42	00000031  68 000006BB			 PUSH	 SYSTOTAL
+1    43	00000036  68 00000010r			 PUSH	 OFFSET(SYSSTART)
+1    44	0000003B  FF 35	0000000Cr		 PUSH	 [FHOUTPUT]
+1    45	00000041  E8 00000000e			 CALL	 DOSWRITE
+1    46	00000046  83 C4	10			 ADD	 ESP,00010h
+     47					 ; close default code page file
+     48	00000049  8B D8			   mov ebx,eax ; return	code
+     49					   call	DosClose c,[fhOutput]
+1    50	0000004B  FF 35	0000000Cr		 PUSH	 [FHOUTPUT]
+1    51	00000051  E8 00000000e			 CALL	 DOSCLOSE
+1    52	00000056  83 C4	04			 ADD	 ESP,00004h
+     53	00000059  8B C3			   mov eax,ebx ; return	code
+     54	0000005B			 label ReportResult near
+     55					 ; return result and exit
+     56					   call	DosExit	c,1,eax
+1    57	0000005B  50				 PUSH	 EAX
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 2
+cty593ec.asm
+
+
+
+1    58	0000005C  6A 01				 PUSH	 1
+1    59	0000005E  E8 00000000e			 CALL	 DOSEXIT
+1    60	00000063  83 C4	08			 ADD	 ESP,00008h
+     61	00000066			 endp MainRoutine
+     62
+     63	00000066			 dataseg
+     64		  =FLAT:0010		 sysStart=$
+     65					 include 'cty593ec.inc'
+1    66					 ; 1st table - header
+1    67	00000010  FF 43	4F 55 4E 54 52+	 h1 db 255,'COUNTRY',1,0,0,0,0,0,0,0,1,0,1,t1-h1,0,0,0
+     68		  59 01	00 00 00 00 00+
+     69		  00 00	01 00 01 3B 00+
+     70		  00 00
+1    71	00000027  40 23	57 2E 4D 2E 42+	 vendor	db '@#W.M.Brul:0.20160308#@cty593ec.sys',0
+     72		  72 75	6C 3A 30 2E 32+
+     73		  30 31	36 30 33 30 38+
+     74		  23 40	63 74 79 35 39+
+     75		  33 65	63 2E 73 79 73+
+     76		  00
+1    77	0000004B  0006			 t1 dw t1records ; (size,country,codepage,offset)
+1    78					 ; 1st table - Ecuador
+1    79	0000004D  000C 0251 01B5 0000 +	   dw 12,593,437,0,0,ec1-h1,0
+     80		  0000 0091 0000
+1    81					 ; 1st table - Ecuador
+1    82	0000005B  000C 0251 0352 0000 +	   dw 12,593,850,0,0,ec2-h1,0
+     83		  0000 00C3 0000
+1    84					 ; 1st table - Netherlands
+1    85	00000069  000C 001F 01B5 0000 +	   dw 12,031,437,0,0,nl1-h1,0
+     86		  0000 00F5 0000
+1    87					 ; 1st table - Netherlands
+1    88	00000077  000C 001F 0352 0000 +	   dw 12,031,850,0,0,nl2-h1,0
+     89		  0000 0127 0000
+1    90					 ; 1st table - United States
+1    91	00000085  000C 0001 01B5 0000 +	   dw 12,001,437,0,0,us1-h1,0
+     92		  0000 0159 0000
+1    93					 ; 1st table - United States
+1    94	00000093  000C 0001 0352 0000 +	   dw 12,001,850,0,0,us2-h1,0
+     95		  0000 018B 0000
+1    96		  =0006			 t1records=($-t1)/(12+2)
+1    97
+1    98					 ; 2nd table - Ecuador
+1    99	000000A1  0006			 ec1 dw	ec1entries ; (size,type,offset)
+1   100	000000A3  0006 0001 01BD 0000	   dw 6,1,ec437-h1,0 ; country information
+1   101	000000AB  0006 0006 02DD 0000	   dw 6,6,cs437-h1,0 ; collating sequence
+1   102	000000B3  0006 0002 04F1 0000	   dw 6,2,cm437-h1,0 ; upper case mapping
+1   103	000000BB  0006 0004 04F1 0000	   dw 6,4,cm437-h1,0 ; upper case mapping
+1   104	000000C3  0006 0005 068F 0000	   dw 6,5,fv-h1,0 ; filename verification
+1   105	000000CB  0006 0007 06AF 0000	   dw 6,7,ev-h1,0 ; environmental vector
+1   106		  =0006			 ec1entries=($-ec1)/(6+2)
+1   107					 ; 2nd table - Ecuador
+1   108	000000D3  0006			 ec2 dw	ec2entries ; (size,type,offset)
+1   109	000000D5  0006 0001 01ED 0000	   dw 6,1,ec850-h1,0 ; country information
+1   110	000000DD  0006 0006 03E7 0000	   dw 6,6,cs850-h1,0 ; collating sequence
+1   111	000000E5  0006 0002 057B 0000	   dw 6,2,cm850-h1,0 ; upper case mapping
+1   112	000000ED  0006 0004 057B 0000	   dw 6,4,cm850-h1,0 ; upper case mapping
+1   113	000000F5  0006 0005 068F 0000	   dw 6,5,fv-h1,0 ; filename verification
+1   114	000000FD  0006 0007 06AF 0000	   dw 6,7,ev-h1,0 ; environmental vector
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 3
+cty593ec.asm
+
+
+
+1   115		  =0006			 ec2entries=($-ec2)/(6+2)
+1   116					 ; 2nd table - Netherlands
+1   117	00000105  0006			 nl1 dw	nl1entries ; (size,type,offset)
+1   118	00000107  0006 0001 021D 0000	   dw 6,1,nl437-h1,0 ; country information
+1   119	0000010F  0006 0006 02DD 0000	   dw 6,6,cs437-h1,0 ; collating sequence
+1   120	00000117  0006 0002 04F1 0000	   dw 6,2,cm437-h1,0 ; upper case mapping
+1   121	0000011F  0006 0004 04F1 0000	   dw 6,4,cm437-h1,0 ; upper case mapping
+1   122	00000127  0006 0005 068F 0000	   dw 6,5,fv-h1,0 ; filename verification
+1   123	0000012F  0006 0007 06AF 0000	   dw 6,7,ev-h1,0 ; environmental vector
+1   124		  =0006			 nl1entries=($-nl1)/(6+2)
+1   125					 ; 2nd table - Netherlands
+1   126	00000137  0006			 nl2 dw	nl2entries ; (size,type,offset)
+1   127	00000139  0006 0001 024D 0000	   dw 6,1,nl850-h1,0 ; country information
+1   128	00000141  0006 0006 03E7 0000	   dw 6,6,cs850-h1,0 ; collating sequence
+1   129	00000149  0006 0002 057B 0000	   dw 6,2,cm850-h1,0 ; upper case mapping
+1   130	00000151  0006 0004 057B 0000	   dw 6,4,cm850-h1,0 ; upper case mapping
+1   131	00000159  0006 0005 068F 0000	   dw 6,5,fv-h1,0 ; filename verification
+1   132	00000161  0006 0007 06AF 0000	   dw 6,7,ev-h1,0 ; environmental vector
+1   133		  =0006			 nl2entries=($-nl2)/(6+2)
+1   134					 ; 2nd table - United States
+1   135	00000169  0006			 us1 dw	us1entries ; (size,type,offset)
+1   136	0000016B  0006 0001 027D 0000	   dw 6,1,us437-h1,0 ; country information
+1   137	00000173  0006 0006 02DD 0000	   dw 6,6,cs437-h1,0 ; collating sequence
+1   138	0000017B  0006 0002 04F1 0000	   dw 6,2,cm437-h1,0 ; upper case mapping
+1   139	00000183  0006 0004 04F1 0000	   dw 6,4,cm437-h1,0 ; upper case mapping
+1   140	0000018B  0006 0005 068F 0000	   dw 6,5,fv-h1,0 ; filename verification
+1   141	00000193  0006 0007 06AF 0000	   dw 6,7,ev-h1,0 ; environmental vector
+1   142		  =0006			 us1entries=($-us1)/(6+2)
+1   143					 ; 2nd table - United States
+1   144	0000019B  0006			 us2 dw	us2entries ; (size,type,offset)
+1   145	0000019D  0006 0001 02AD 0000	   dw 6,1,us850-h1,0 ; country information
+1   146	000001A5  0006 0006 03E7 0000	   dw 6,6,cs850-h1,0 ; collating sequence
+1   147	000001AD  0006 0002 057B 0000	   dw 6,2,cm850-h1,0 ; upper case mapping
+1   148	000001B5  0006 0004 057B 0000	   dw 6,4,cm850-h1,0 ; upper case mapping
+1   149	000001BD  0006 0005 068F 0000	   dw 6,5,fv-h1,0 ; filename verification
+1   150	000001C5  0006 0007 06AF 0000	   dw 6,7,ev-h1,0 ; environmental vector
+1   151		  =0006			 us2entries=($-us2)/(6+2)
+1   152
+1   153					 ;------------------------------------------------------------------------------
+1   154					 ; CTYINFO - Country Information - DosGetCtryInfo()
+1   155					 ;------------------------------------------------------------------------------
+1   156					 ; country information - Equador
+1   157	000001CD  FF 43	54 59 49 4E 46+	 ec437 db 255,'CTYINFO',ec437size,0
+    158		  4F 26	00
+1   159	000001D7  0251 01B5		   dw 593,437 ;	country,codepage
+1   160	000001DB  0001			   dw 1	; date format <dd/mm/yy>
+1   161	000001DD  24 00	00 00 00	   db '$',0,0,0,0 ; currency
+1   162	000001E2  2E 00			   db '.',0 ; thousands	separator
+1   163	000001E4  2C 00			   db ',',0 ; decimal separator
+1   164	000001E6  2F 00			   db '/',0 ; date separator
+1   165	000001E8  3A 00			   db ':',0 ; time separator
+1   166	000001EA  02			   db 2	; currency format
+1   167	000001EB  02			   db 2	; decimal place
+1   168	000001EC  01			   db 1	; time format <24-hour>
+1   169	000001ED  02*(0000)		   dw 2	dup(0) ; reserved
+1   170	000001F1  3B 00			   db ';',0 ; data list	separator
+1   171	000001F3  05*(0000)		   dw 5	dup(0) ; reserved
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 4
+cty593ec.asm
+
+
+
+1   172		  =0026			 ec437size=$-ec437-10
+1   173					 ; country information - Equador
+1   174	000001FD  FF 43	54 59 49 4E 46+	 ec850 db 255,'CTYINFO',ec850size,0
+    175		  4F 26	00
+1   176	00000207  0251 0352		   dw 593,850 ;	country,codepage
+1   177	0000020B  0001			   dw 1	; date format <dd/mm/yy>
+1   178	0000020D  24 00	00 00 00	   db '$',0,0,0,0 ; currency
+1   179	00000212  2E 00			   db '.',0 ; thousands	separator
+1   180	00000214  2C 00			   db ',',0 ; decimal separator
+1   181	00000216  2F 00			   db '/',0 ; date separator
+1   182	00000218  3A 00			   db ':',0 ; time separator
+1   183	0000021A  02			   db 2	; currency format
+1   184	0000021B  02			   db 2	; decimal place
+1   185	0000021C  01			   db 1	; time format <24-hour>
+1   186	0000021D  02*(0000)		   dw 2	dup(0) ; reserved
+1   187	00000221  3B 00			   db ';',0 ; data list	separator
+1   188	00000223  05*(0000)		   dw 5	dup(0) ; reserved
+1   189		  =0026			 ec850size=$-ec850-10
+1   190					 ; country information - Netherlands
+1   191	0000022D  FF 43	54 59 49 4E 46+	 nl437 db 255,'CTYINFO',nl437size,0
+    192		  4F 26	00
+1   193	00000237  001F 01B5		   dw 031,437 ;	country,codepage
+1   194	0000023B  0001			   dw 1	; date format <dd/mm/yy>
+1   195	0000023D  9F 00	00 00 00	   db 'ü',0,0,0,0 ; currency
+1   196	00000242  2E 00			   db '.',0 ; thousands	separator
+1   197	00000244  2C 00			   db ',',0 ; decimal separator
+1   198	00000246  2D 00			   db '-',0 ; date separator
+1   199	00000248  3A 00			   db ':',0 ; time separator
+1   200	0000024A  02			   db 2	; currency format
+1   201	0000024B  02			   db 2	; decimal place
+1   202	0000024C  01			   db 1	; time format <24-hour>
+1   203	0000024D  02*(0000)		   dw 2	dup(0) ; reserved
+1   204	00000251  3B 00			   db ';',0 ; data list	separator
+1   205	00000253  05*(0000)		   dw 5	dup(0) ; reserved
+1   206		  =0026			 nl437size=$-nl437-10
+1   207					 ; country information - Netherlands
+1   208	0000025D  FF 43	54 59 49 4E 46+	 nl850 db 255,'CTYINFO',nl850size,0
+    209		  4F 26	00
+1   210	00000267  001F 0352		   dw 031,850 ;	country,codepage
+1   211	0000026B  0001			   dw 1	; date format <dd/mm/yy>
+1   212	0000026D  9F 00	00 00 00	   db 'ü',0,0,0,0 ; currency
+1   213	00000272  2E 00			   db '.',0 ; thousands	separator
+1   214	00000274  2C 00			   db ',',0 ; decimal separator
+1   215	00000276  2D 00			   db '-',0 ; date separator
+1   216	00000278  3A 00			   db ':',0 ; time separator
+1   217	0000027A  02			   db 2	; currency format
+1   218	0000027B  02			   db 2	; decimal place
+1   219	0000027C  01			   db 1	; time format <24-hour>
+1   220	0000027D  02*(0000)		   dw 2	dup(0) ; reserved
+1   221	00000281  3B 00			   db ';',0 ; data list	separator
+1   222	00000283  05*(0000)		   dw 5	dup(0) ; reserved
+1   223		  =0026			 nl850size=$-nl850-10
+1   224					 ; country information - United	States
+1   225	0000028D  FF 43	54 59 49 4E 46+	 us437 db 255,'CTYINFO',us437size,0
+    226		  4F 26	00
+1   227	00000297  0001 01B5		   dw 001,437 ;	country,codepage
+1   228	0000029B  0000			   dw 0	; date format <mm/dd/yy>
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 5
+cty593ec.asm
+
+
+
+1   229	0000029D  24 00	00 00 00	   db '$',0,0,0,0 ; currency
+1   230	000002A2  2C 00			   db ',',0 ; thousands	separator
+1   231	000002A4  2E 00			   db '.',0 ; decimal separator
+1   232	000002A6  2D 00			   db '-',0 ; date separator
+1   233	000002A8  3A 00			   db ':',0 ; time separator
+1   234	000002AA  00			   db 0	; currency format
+1   235	000002AB  02			   db 2	; decimal place
+1   236	000002AC  00			   db 0	; time format <12-hour>
+1   237	000002AD  02*(0000)		   dw 2	dup(0) ; reserved
+1   238	000002B1  2C 00			   db ',',0 ; data list	separator
+1   239	000002B3  05*(0000)		   dw 5	dup(0) ; reserved
+1   240		  =0026			 us437size=$-us437-10
+1   241					 ; country information - United	States
+1   242	000002BD  FF 43	54 59 49 4E 46+	 us850 db 255,'CTYINFO',us437size,0
+    243		  4F 26	00
+1   244	000002C7  0001 0352		   dw 001,850 ;	country,codepage
+1   245	000002CB  0000			   dw 0	; date format <mm/dd/yy>
+1   246	000002CD  24 00	00 00 00	   db '$',0,0,0,0 ; currency
+1   247	000002D2  2C 00			   db ',',0 ; thousands	separator
+1   248	000002D4  2E 00			   db '.',0 ; decimal separator
+1   249	000002D6  2D 00			   db '-',0 ; date separator
+1   250	000002D8  3A 00			   db ':',0 ; time separator
+1   251	000002DA  00			   db 0	; currency format
+1   252	000002DB  02			   db 2	; decimal place
+1   253	000002DC  00			   db 0	; time format <12-hour>
+1   254	000002DD  02*(0000)		   dw 2	dup(0) ; reserved
+1   255	000002E1  2C 00			   db ',',0 ; data list	separator
+1   256	000002E3  05*(0000)		   dw 5	dup(0) ; reserved
+1   257		  =0026			 us850size=$-us850-10
+1   258
+1   259					 ;------------------------------------------------------------------------------
+1   260					 ; COLLATE - Collating Sequence	- DosGetCollate()
+1   261					 ;------------------------------------------------------------------------------
+1   262	000002ED  FF 43	4F 4C 4C 41 54+	 cs437 db 255,'COLLATE',00h,01h	; 256 bytes
+    263		  45 00	01
+1   264	000002F7  00 01	02 03 04 05 06+	   db 00h,'','','','','','','','',09h,0Ah,'','',0Dh,'','' ;	000-015
+    265		  07 08	09 0A 0B 0C 0D+
+    266		  0E 0F
+1   267	00000307  10 11	12 13 14 15 16+	   db '','','','','','','','','','','','','','','','' ; 016-031
+    268		  17 18	19 1A 1B 1C 1D+
+    269		  1E 1F
+1   270	00000317  20 21	22 23 24 25 26+	   db '	','!','"','#','$','%','&',"'",'(',')','*','+',',','-','.','/' ;	032-047
+    271		  27 28	29 2A 2B 2C 2D+
+    272		  2E 2F
+1   273	00000327  30 31	32 33 34 35 36+	   db '0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?' ;	048-063
+    274		  37 38	39 3A 3B 3C 3D+
+    275		  3E 3F
+1   276	00000337  40 41	42 43 44 45 46+	   db '@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O' ;	064-079
+    277		  47 48	49 4A 4B 4C 4D+
+    278		  4E 4F
+1   279	00000347  50 51	52 53 54 55 56+	   db 'P','Q','R','S','T','U','V','W','X','Y','Z','[','\',']','^','_' ;	080-095
+    280		  57 58	59 5A 5B 5C 5D+
+    281		  5E 5F
+1   282	00000357  60 41	42 43 44 45 46+	   db '`','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O' ;	096-111
+    283		  47 48	49 4A 4B 4C 4D+
+    284		  4E 4F
+1   285	00000367  50 51	52 53 54 55 56+	   db 'P','Q','R','S','T','U','V','W','X','Y','Z','{','|','}','~','' ;	112-127
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 6
+cty593ec.asm
+
+
+
+    286		  57 58	59 5A 7B 7C 7D+
+    287		  7E 7F
+1   288	00000377  43 55	45 41 41 41 41+	   db 'C','U','E','A','A','A','A','C','E','E','E','I','I','I','A','A' ;	128-143
+    289		  43 45	45 45 49 49 49+
+    290		  41 41
+1   291	00000387  45 41	41 4F 4F 4F 55+	   db 'E','A','A','O','O','O','U','U','Y','O','U','$','$','$','$','$' ;	144-159
+    292		  55 59	4F 55 24 24 24+
+    293		  24 24
+1   294	00000397  41 49	4F 55 4E 4E A6+	   db 'A','I','O','U','N','N','¶','ß','?','©','™','´','¨','!','"','"' ;	160-175
+    295		  A7 3F	A9 AA AB AC 21+
+    296		  22 22
+1   297	000003A7  B0 B1	B2 B3 B4 B5 B6+	   db '∞','±','≤','≥','¥','µ','∂','∑','∏','π','∫','ª','º','Ω','æ','ø' ;	176-191
+    298		  B7 B8	B9 BA BB BC BD+
+    299		  BE BF
+1   300	000003B7  C0 C1	C2 C3 C4 C5 C6+	   db '¿','¡','¬','√','ƒ','≈','∆','«','»','…',' ','À','Ã','Õ','Œ','œ' ;	192-207
+    301		  C7 C8	C9 CA CB CC CD+
+    302		  CE CF
+1   303	000003C7  D0 D1	D2 D3 D4 D5 D6+	   db '–','—','“','”','‘','’','÷','◊','ÿ','Ÿ','⁄','€','‹','›','ﬁ','ﬂ' ;	208-223
+    304		  D7 D8	D9 DA DB DC DD+
+    305		  DE DF
+1   306	000003D7  E0 53	E2 E3 E4 E5 E6+	   db '‡','S','‚','„','‰','Â','Ê','Á','Ë','È','Í','Î','Ï','Ì','Ó','Ô' ;	224-239
+    307		  E7 E8	E9 EA EB EC ED+
+    308		  EE EF
+1   309	000003E7  F0 F1	F2 F3 F4 F5 F6+	   db '','Ò','Ú','Û','Ù','ı','ˆ','˜','¯','˘','˙','˚','¸','˝','˛','ˇ' ;	240-255
+    310		  F7 F8	F9 FA FB FC FD+
+    311		  FE FF
+1   312	000003F7  FF 43	4F 4C 4C 41 54+	 cs850 db 255,'COLLATE',00h,01h	; 256 bytes
+    313		  45 00	01
+1   314	00000401  00 01	02 03 04 05 06+	   db 00h,'','','','','','','','',09h,0Ah,'','',0Dh,'','' ;	000-015
+    315		  07 08	09 0A 0B 0C 0D+
+    316		  0E 0F
+1   317	00000411  10 11	12 13 14 15 16+	   db '','','','','','','','','','','','','','','','' ; 016-031
+    318		  17 18	19 1A 1B 1C 1D+
+    319		  1E 1F
+1   320	00000421  20 21	22 23 24 25 26+	   db '	','!','"','#','$','%','&',"'",'(',')','*','+',',','-','.','/' ;	032-047
+    321		  27 28	29 2A 2B 2C 2D+
+    322		  2E 2F
+1   323	00000431  30 31	32 33 34 35 36+	   db '0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?' ;	048-063
+    324		  37 38	39 3A 3B 3C 3D+
+    325		  3E 3F
+1   326	00000441  40 41	42 43 44 45 46+	   db '@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O' ;	064-079
+    327		  47 48	49 4A 4B 4C 4D+
+    328		  4E 4F
+1   329	00000451  50 51	52 53 54 55 56+	   db 'P','Q','R','S','T','U','V','W','X','Y','Z','[','\',']','^','_' ;	080-095
+    330		  57 58	59 5A 5B 5C 5D+
+    331		  5E 5F
+1   332	00000461  60 41	42 43 44 45 46+	   db '`','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O' ;	096-111
+    333		  47 48	49 4A 4B 4C 4D+
+    334		  4E 4F
+1   335	00000471  50 51	52 53 54 55 56+	   db 'P','Q','R','S','T','U','V','W','X','Y','Z','{','|','}','~','' ;	112-127
+    336		  57 58	59 5A 7B 7C 7D+
+    337		  7E 7F
+1   338	00000481  43 55	45 41 41 41 41+	   db 'C','U','E','A','A','A','A','C','E','E','E','I','I','I','A','A' ;	128-143
+    339		  43 45	45 45 49 49 49+
+    340		  41 41
+1   341	00000491  45 41	41 4F 4F 4F 55+	   db 'E','A','A','O','O','O','U','U','Y','O','U','O','$','O','û','$' ;	144-159
+    342		  55 59	4F 55 4F 24 4F+
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 7
+cty593ec.asm
+
+
+
+    343		  9E 24
+1   344	000004A1  41 49	4F 55 4E 4E A6+	   db 'A','I','O','U','N','N','¶','ß','?','©','™','´','¨','!','"','"' ;	160-175
+    345		  A7 3F	A9 AA AB AC 21+
+    346		  22 22
+1   347	000004B1  B0 B1	B2 B3 B4 41 41+	   db '∞','±','≤','≥','¥','A','A','A','∏','π','∫','ª','º','$','$','ø' ;	176-191
+    348		  41 B8	B9 BA BB BC 24+
+    349		  24 BF
+1   350	000004C1  C0 C1	C2 C3 C4 C5 41+	   db '¿','¡','¬','√','ƒ','≈','A','A','»','…',' ','À','Ã','Õ','Œ','$' ;	192-207
+    351		  41 C8	C9 CA CB CC CD+
+    352		  CE 24
+1   353	000004D1  44 44	45 45 45 24 49+	   db 'D','D','E','E','E','$','I','I','I','Ÿ','⁄','€','‹','›','I','ﬂ' ;	208-223
+    354		  49 49	D9 DA DB DC DD+
+    355		  49 DF
+1   356	000004E1  4F 53	4F 4F 4F 4F E6+	   db 'O','S','O','O','O','O','Ê','Ë','Ë','U','U','U','Y','Y','Ó','Ô' ;	224-239
+    357		  E8 E8	55 55 55 59 59+
+    358		  EE EF
+1   359	000004F1  F0 F1	F2 F3 F4 F5 F6+	   db '','Ò','Ú','Û','Ù','ı','ˆ','˜','¯','˘','˙','˚','¸','˝','˛','ˇ' ;	240-255
+    360		  F7 F8	F9 FA FB FC FD+
+    361		  FE FF
+1   362
+1   363					 ;------------------------------------------------------------------------------
+1   364					 ; UCASE - Case	Map - DosCaseMap()
+1   365					 ;------------------------------------------------------------------------------
+1   366	00000501  FF 55	43 41 53 45 20+	 cm437 db 255,'UCASE  ',80h,00h	; 128 bytes
+    367		  20 80	00
+1   368	0000050B  80 9A	90 41 8E 41 8F+	   db 'Ä','ö','ê','A','é','A','è','Ä','E','E','E','I','I','I','é','è' ;	128-143
+    369		  80 45	45 45 49 49 49+
+    370		  8E 8F
+1   371	0000051B  90 92	92 4F 99 4F 55+	   db 'ê','í','í','O','ô','O','U','U','Y','ô','ö','õ','ú','ù','û','ü' ;	144-159
+    372		  55 59	99 9A 9B 9C 9D+
+    373		  9E 9F
+1   374	0000052B  41 49	4F 55 A5 A5 A6+	   db 'A','I','O','U','•','•','¶','ß','®','©','™','´','¨','≠','Æ','Ø' ;	160-175
+    375		  A7 A8	A9 AA AB AC AD+
+    376		  AE AF
+1   377	0000053B  B0 B1	B2 B3 B4 B5 B6+	   db '∞','±','≤','≥','¥','µ','∂','∑','∏','π','∫','ª','º','Ω','æ','ø' ;	176-191
+    378		  B7 B8	B9 BA BB BC BD+
+    379		  BE BF
+1   380	0000054B  C0 C1	C2 C3 C4 C5 C6+	   db '¿','¡','¬','√','ƒ','≈','∆','«','»','…',' ','À','Ã','Õ','Œ','œ' ;	192-207
+    381		  C7 C8	C9 CA CB CC CD+
+    382		  CE CF
+1   383	0000055B  D0 D1	D2 D3 D4 D5 D6+	   db '–','—','“','”','‘','’','÷','◊','ÿ','Ÿ','⁄','€','‹','›','ﬁ','ﬂ' ;	208-223
+    384		  D7 D8	D9 DA DB DC DD+
+    385		  DE DF
+1   386	0000056B  E0 E1	E2 E3 E4 E5 E6+	   db '‡','·','‚','„','‰','Â','Ê','Á','Ë','È','Í','Î','Ï','Ì','Ó','Ô' ;	224-239
+    387		  E7 E8	E9 EA EB EC ED+
+    388		  EE EF
+1   389	0000057B  F0 F1	F2 F3 F4 F5 F6+	   db '','Ò','Ú','Û','Ù','ı','ˆ','˜','¯','˘','˙','˚','¸','˝','˛','ˇ' ;	240-255
+    390		  F7 F8	F9 FA FB FC FD+
+    391		  FE FF
+1   392	0000058B  FF 55	43 41 53 45 20+	 cm850 db 255,'UCASE  ',80h,00h	; 128 bytes
+    393		  20 80	00
+1   394	00000595  80 9A	90 B6 8E B7 8F+	   db 'Ä','ö','ê','∂','é','∑','è','Ä','“','”','‘','ÿ','◊','ﬁ','é','è' ;	128-143
+    395		  80 D2	D3 D4 D8 D7 DE+
+    396		  8E 8F
+1   397	000005A5  90 92	92 E2 99 E3 EA+	   db 'ê','í','í','‚','ô','„','Í','Î','Y','ô','ö','ù','ú','ù','û','ü' ;	144-159
+    398		  EB 59	99 9A 9D 9C 9D+
+    399		  9E 9F
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 8
+cty593ec.asm
+
+
+
+1   400	000005B5  B5 D6	E0 E9 A5 A5 A6+	   db 'µ','÷','‡','È','•','•','¶','ß','®','©','™','´','¨','≠','Æ','Ø' ;	160-175
+    401		  A7 A8	A9 AA AB AC AD+
+    402		  AE AF
+1   403	000005C5  B0 B1	B2 B3 B4 B5 B6+	   db '∞','±','≤','≥','¥','µ','∂','∑','∏','π','∫','ª','º','Ω','æ','ø' ;	176-191
+    404		  B7 B8	B9 BA BB BC BD+
+    405		  BE BF
+1   406	000005D5  C0 C1	C2 C3 C4 C5 C7+	   db '¿','¡','¬','√','ƒ','≈','«','«','»','…',' ','À','Ã','Õ','Œ','œ' ;	192-207
+    407		  C7 C8	C9 CA CB CC CD+
+    408		  CE CF
+1   409	000005E5  D1 D1	D2 D3 D4 D5 D6+	   db '—','—','“','”','‘','’','÷','◊','ÿ','Ÿ','⁄','€','‹','›','ﬁ','ﬂ' ;	208-223
+    410		  D7 D8	D9 DA DB DC DD+
+    411		  DE DF
+1   412	000005F5  E0 E1	E2 E3 E5 E5 E6+	   db '‡','·','‚','„','Â','Â','Ê','Ë','Ë','È','Í','Î','Ì','Ì','Ó','Ô' ;	224-239
+    413		  E8 E8	E9 EA EB ED ED+
+    414		  EE EF
+1   415	00000605  F0 F1	F2 F3 F4 F5 F6+	   db '','Ò','Ú','Û','Ù','ı','ˆ','˜','¯','˘','˙','˚','¸','˝','˛','ˇ' ;	240-255
+    416		  F7 F8	F9 FA FB FC FD+
+    417		  FE FF
+1   418
+1   419					 ;------------------------------------------------------------------------------
+1   420					 ; FUCASE - Filename Upper Case	- Case Preserving!
+1   421					 ;------------------------------------------------------------------------------
+1   422	00000615  FF 46	55 43 41 53 45+	 fu db 255,'FUCASE ',80h,00h ; 128 bytes
+    423		  20 80	00
+1   424	0000061F  80 81	82 83 84 85 86+	   db 'Ä','Å','Ç','É','Ñ','Ö','Ü','á','à','â','ä','ã','å','ç','é','è' ;	128-143
+    425		  87 88	89 8A 8B 8C 8D+
+    426		  8E 8F
+1   427	0000062F  90 91	92 93 94 95 96+	   db 'ê','ë','í','ì','î','ï','ñ','ó','ò','ô','ö','õ','ú','ù','û','ü' ;	144-159
+    428		  97 98	99 9A 9B 9C 9D+
+    429		  9E 9F
+1   430	0000063F  A0 A1	A2 A3 A4 A5 A6+	   db '†','°','¢','£','§','•','¶','ß','®','©','™','´','¨','≠','Æ','Ø' ;	160-175
+    431		  A7 A8	A9 AA AB AC AD+
+    432		  AE AF
+1   433	0000064F  B0 B1	B2 B3 B4 B5 B6+	   db '∞','±','≤','≥','¥','µ','∂','∑','∏','π','∫','ª','º','Ω','æ','ø' ;	176-191
+    434		  B7 B8	B9 BA BB BC BD+
+    435		  BE BF
+1   436	0000065F  C0 C1	C2 C3 C4 C5 C6+	   db '¿','¡','¬','√','ƒ','≈','∆','«','»','…',' ','À','Ã','Õ','Œ','œ' ;	192-207
+    437		  C7 C8	C9 CA CB CC CD+
+    438		  CE CF
+1   439	0000066F  D0 D1	D2 D3 D4 D5 D6+	   db '–','—','“','”','‘','’','÷','◊','ÿ','Ÿ','⁄','€','‹','›','ﬁ','ﬂ' ;	208-223
+    440		  D7 D8	D9 DA DB DC DD+
+    441		  DE DF
+1   442	0000067F  E0 E1	E2 E3 E4 E5 E6+	   db '‡','·','‚','„','‰','Â','Ê','Á','Ë','È','Í','Î','Ï','Ì','Ó','Ô' ;	224-239
+    443		  E7 E8	E9 EA EB EC ED+
+    444		  EE EF
+1   445	0000068F  F0 F1	F2 F3 F4 F5 F6+	   db '','Ò','Ú','Û','Ù','ı','ˆ','˜','¯','˘','˙','˚','¸','˝','˛','ˇ' ;	240-255
+    446		  F7 F8	F9 FA FB FC FD+
+    447		  FE FF
+1   448
+1   449					 ;------------------------------------------------------------------------------
+1   450					 ; FCHAR - Filename Character -	Verification
+1   451					 ;------------------------------------------------------------------------------
+1   452	0000069F  FF 46	43 48 41 52 20+	 fv db 255,'FCHAR  ',16h,00h ; 22 bytes
+    453		  20 16	00
+1   454	000006A9  0001 00FF		   dw 001,255 ;	minimum,maximum	possible
+1   455	000006AD  00 20			   db 00h,20h ;	minimum,maximum	forbidden
+1   456	000006AF  02 0E			   db 02h,014 ;	version,count forbidden
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 9
+cty593ec.asm
+
+
+
+1   457	000006B1  2E 22	2F 5C 5B 5D 3A+	   db '."/\[]:|<>+=;,' ; characters
+    458		  7C 3C	3E 2B 3D 3B 2C
+1   459
+1   460					 ;------------------------------------------------------------------------------
+1   461					 ; DBCS	- Environmental	Vector - DosGetDBCSEv()
+1   462					 ;------------------------------------------------------------------------------
+1   463	000006BF  FF 44	42 43 53 20 20+	 ev db 255,'DBCS   ',02h,00h ; 2 bytes
+    464		  20 02	00
+1   465	000006C9  00 00			   db 00h,00h ;	delimiter
+1   466
+1   467
+    468		  =06BB			 sysTotal=$-sysStart
+    469
+    470					 end MainRoutine
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 10
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "08-03-16"
+??FILENAME			  Text	 "cty593ec"
+??TIME				  Text	 "10:16:31"
+??VERSION			  Number 0401
+@32BIT				  Text	 1
+@@ARG				  Number [FLAT:EBP+0014]
+@@ENV				  Number [FLAT:EBP+0010]
+@@MOD				  Number [FLAT:EBP+0008]
+@@NUL				  Number [FLAT:EBP+000C]
+@CODE				  Text	 FLAT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F8FH
+@CURSEG				  Text	 _DATA
+@DATA				  Text	 FLAT
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 CTY593EC
+@INTERFACE			  Text	 00H
+@MODEL				  Text	 1
+@STACK				  Text	 FLAT
+@WORDSIZE			  Text	 4
+ACTIONTAKEN			  Dword	 FLAT:0000
+BYTESDONE			  Dword	 FLAT:0004
+CM437				  Byte	 FLAT:0501
+CM850				  Byte	 FLAT:058B
+CS437				  Byte	 FLAT:02ED
+CS850				  Byte	 FLAT:03F7
+DOSCLOSE			  Near	 ----:---- Extern
+DOSEXIT				  Near	 ----:---- Extern
+DOSOPEN				  Near	 ----:---- Extern
+DOSWRITE			  Near	 ----:---- Extern
+EC1				  Word	 FLAT:00A1
+EC1ENTRIES			  Number 0006
+EC2				  Word	 FLAT:00D3
+EC2ENTRIES			  Number 0006
+EC437				  Byte	 FLAT:01CD
+EC437SIZE			  Number 0026
+EC850				  Byte	 FLAT:01FD
+EC850SIZE			  Number 0026
+EV				  Byte	 FLAT:06BF
+FHOUTPUT			  Dword	 FLAT:000C
+FU				  Byte	 FLAT:0615
+FV				  Byte	 FLAT:069F
+H1				  Byte	 FLAT:0010
+MAINROUTINE			  Near	 FLAT:0000
+NL1				  Word	 FLAT:0105
+NL1ENTRIES			  Number 0006
+NL2				  Word	 FLAT:0137
+NL2ENTRIES			  Number 0006
+NL437				  Byte	 FLAT:022D
+NL437SIZE			  Number 0026
+NL850				  Byte	 FLAT:025D
+NL850SIZE			  Number 0026
+REPORTRESULT			  Near	 FLAT:005B
+SYSSTART			  Number FLAT:0010
+Turbo Assembler	 Version 4.1	    08-03-16 10:16:31	    Page 11
+Symbol Table
+
+
+
+SYSTOTAL			  Number 06BB
+SZOUTPUT			  Byte	 FLAT:0000
+T1				  Word	 FLAT:004B
+T1RECORDS			  Number 0006
+US1				  Word	 FLAT:0169
+US1ENTRIES			  Number 0006
+US2				  Word	 FLAT:019B
+US2ENTRIES			  Number 0006
+US437				  Byte	 FLAT:028D
+US437SIZE			  Number 0026
+US850				  Byte	 FLAT:02BD
+US850SIZE			  Number 0026
+VENDOR				  Byte	 FLAT:0027
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  STACK				  32  2000 Para	  Stack	  STACK
+  _BSS				  32  0008 Dword  Public  BSS
+  _DATA				  32  06CB Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  0066 Dword  Public  CODE
+
