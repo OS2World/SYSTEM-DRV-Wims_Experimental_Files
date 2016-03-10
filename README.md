@@ -4,7 +4,7 @@ AS IS. It is just experimental.
 
 LICENSE
 ===============
-* 
+* BSD 3-Clause
 
 COMPILE TOOLS
 ===============
