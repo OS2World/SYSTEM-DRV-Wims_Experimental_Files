@@ -1,0 +1,355 @@
+Turbo Assembler	 Version 4.1	    27-03-16 10:37:24	    Page 1
+vio593ec.asm
+
+
+
+      1					 .386p
+      2	00000000			 model flat
+      3					 ideal
+      4
+      5					 extrn DosClose:near
+      6					 extrn DosExit:near
+      7					 extrn DosOpen:near
+      8					 extrn DosRead:near
+      9					 extrn DosWrite:near
+     10
+     11	00000000			 stack 8192
+     12
+     13	00002000			 dataseg
+     14	00000000  63 70	34 33 37 63 67+	 szInput1 db 'cp437cga.rom',0
+     15		  61 2E	72 6F 6D 00
+     16	0000000D  63 70	34 33 37 65 67+	 szInput2 db 'cp437ega.rom',0
+     17		  61 2E	72 6F 6D 00
+     18	0000001A  63 70	34 33 37 76 67+	 szInput3 db 'cp437vga.rom',0
+     19		  61 2E	72 6F 6D 00
+     20	00000027  63 70	38 35 30 63 67+	 szInput4 db 'cp850cga.rom',0
+     21		  61 2E	72 6F 6D 00
+     22	00000034  63 70	38 35 30 65 67+	 szInput5 db 'cp850ega.rom',0
+     23		  61 2E	72 6F 6D 00
+     24	00000041  63 70	38 35 30 76 67+	 szInput6 db 'cp850vga.rom',0
+     25		  61 2E	72 6F 6D 00
+     26
+     27	0000004E			 dataseg
+     28	0000004E  76 69	6F 35 39 33 65+	 szOutput db 'vio593ec.dcp'
+     29		  63 2E	64 63 70
+     30	0000005A  00000000		 fhOutput dd 0
+     31
+     32	0000005E			 udataseg
+     33	00000000  ????????		 ActionTaken dd	?
+     34	00000004  ????????		 BytesDone dd ?
+     35
+     36	00000008			 codeseg
+     37	00000000			 proc MainRoutine c near
+     38					 arg @@Mod,@@Nul,@@Env,@@Arg
+     39					 ; load	code page 437 cga rom data
+1    40	00000000  C8 0000 00			 ENTERD	 00000h,0
+1    41					   call	LoadRomData c,offset(szInput1),offset(cp437cga)
+2    42	00000004  68 000000B6r			 PUSH	 OFFSET(CP437CGA)
+2    43	00000009  68 00000000r			 PUSH	 OFFSET(SZINPUT1)
+2    44	0000000E  E8 000000E7			 CALL	 LOADROMDATA
+2    45	00000013  83 C4	08			 ADD	 ESP,00008h
+     46	00000016  85 C0			   test	eax,eax	; return code
+     47	00000018  0F 85	000000D1	   jnz ReportResult ; error
+     48					 ; load	code page 437 ega rom data
+     49					   call	LoadRomData c,offset(szInput2),offset(cp437ega)
+1    50	0000001E  68 000008CEr			 PUSH	 OFFSET(CP437EGA)
+1    51	00000023  68 0000000Dr			 PUSH	 OFFSET(SZINPUT2)
+1    52	00000028  E8 000000CD			 CALL	 LOADROMDATA
+1    53	0000002D  83 C4	08			 ADD	 ESP,00008h
+     54	00000030  85 C0			   test	eax,eax	; return code
+     55	00000032  0F 85	000000B7	   jnz ReportResult ; error
+     56					 ; load	code page 437 vga rom data
+     57					   call	LoadRomData c,offset(szInput3),offset(cp437vga)
+Turbo Assembler	 Version 4.1	    27-03-16 10:37:24	    Page 2
+vio593ec.asm
+
+
+
+1    58	00000038  68 0000170Dr			 PUSH	 OFFSET(CP437VGA)
+1    59	0000003D  68 0000001Ar			 PUSH	 OFFSET(SZINPUT3)
+1    60	00000042  E8 000000B3			 CALL	 LOADROMDATA
+1    61	00000047  83 C4	08			 ADD	 ESP,00008h
+     62	0000004A  85 C0			   test	eax,eax	; return code
+     63	0000004C  0F 85	0000009D	   jnz ReportResult ; error
+     64					 ; load	code page 850 cga rom data
+     65					   call	LoadRomData c,offset(szInput4),offset(cp850cga)
+1    66	00000052  68 0000274Er			 PUSH	 OFFSET(CP850CGA)
+1    67	00000057  68 00000027r			 PUSH	 OFFSET(SZINPUT4)
+1    68	0000005C  E8 00000099			 CALL	 LOADROMDATA
+1    69	00000061  83 C4	08			 ADD	 ESP,00008h
+     70	00000064  85 C0			   test	eax,eax	; return code
+     71	00000066  0F 85	00000083	   jnz ReportResult ; error
+     72					 ; load	code page 850 ega rom data
+     73					   call	LoadRomData c,offset(szInput5),offset(cp850ega)
+1    74	0000006C  68 00002F66r			 PUSH	 OFFSET(CP850EGA)
+1    75	00000071  68 00000034r			 PUSH	 OFFSET(SZINPUT5)
+1    76	00000076  E8 0000007F			 CALL	 LOADROMDATA
+1    77	0000007B  83 C4	08			 ADD	 ESP,00008h
+     78	0000007E  85 C0			   test	eax,eax	; return code
+     79	00000080  75 6D			   jnz ReportResult ; error
+     80					 ; load	code page 850 vga rom data
+     81					   call	LoadRomData c,offset(szInput6),offset(cp850vga)
+1    82	00000082  68 00003DA5r			 PUSH	 OFFSET(CP850VGA)
+1    83	00000087  68 00000041r			 PUSH	 OFFSET(SZINPUT6)
+1    84	0000008C  E8 00000069			 CALL	 LOADROMDATA
+1    85	00000091  83 C4	08			 ADD	 ESP,00008h
+     86	00000094  85 C0			   test	eax,eax	; return code
+     87	00000096  75 57			   jnz ReportResult ; error
+     88					 ; open	default	code page file
+     89					   call	DosOpen	c,offset(szOutput),offset(fhOutput),offset(ActionTaken),0,0,012h,0191h,0
+1    90	00000098  6A 00				 PUSH	 0
+1    91	0000009A  68 00000191			 PUSH	 0191H
+1    92	0000009F  6A 12				 PUSH	 012H
+1    93	000000A1  6A 00				 PUSH	 0
+1    94	000000A3  6A 00				 PUSH	 0
+1    95	000000A5  68 00000000r			 PUSH	 OFFSET(ACTIONTAKEN)
+1    96	000000AA  68 0000005Ar			 PUSH	 OFFSET(FHOUTPUT)
+1    97	000000AF  68 0000004Er			 PUSH	 OFFSET(SZOUTPUT)
+1    98	000000B4  E8 00000000e			 CALL	 DOSOPEN
+1    99	000000B9  83 C4	20			 ADD	 ESP,00020h
+    100	000000BC  85 C0			   test	eax,eax	; return code
+    101	000000BE  75 2F			   jnz ReportResult ; error
+    102					 ; write default code page file
+    103					   call	DosWrite c,[fhOutput],offset(sysStart),sysTotal,offset(BytesDone)
+1   104	000000C0  68 00000004r			 PUSH	 OFFSET(BYTESDONE)
+1   105	000000C5  68 00004D84			 PUSH	 SYSTOTAL
+1   106	000000CA  68 00000062r			 PUSH	 OFFSET(SYSSTART)
+1   107	000000CF  FF 35	0000005Ar		 PUSH	 [FHOUTPUT]
+1   108	000000D5  E8 00000000e			 CALL	 DOSWRITE
+1   109	000000DA  83 C4	10			 ADD	 ESP,00010h
+    110					 ; close default code page file
+    111	000000DD  8B D8			   mov ebx,eax ; return	code
+    112					   call	DosClose c,[fhOutput]
+1   113	000000DF  FF 35	0000005Ar		 PUSH	 [FHOUTPUT]
+1   114	000000E5  E8 00000000e			 CALL	 DOSCLOSE
+Turbo Assembler	 Version 4.1	    27-03-16 10:37:24	    Page 3
+vio593ec.asm
+
+
+
+1   115	000000EA  83 C4	04			 ADD	 ESP,00004h
+    116	000000ED  8B C3			   mov eax,ebx ; return	code
+    117	000000EF			 label ReportResult near
+    118					 ; return result and exit
+    119					   call	DosExit	c,1,eax
+1   120	000000EF  50				 PUSH	 EAX
+1   121	000000F0  6A 01				 PUSH	 1
+1   122	000000F2  E8 00000000e			 CALL	 DOSEXIT
+1   123	000000F7  83 C4	08			 ADD	 ESP,00008h
+    124	000000FA			 endp MainRoutine
+    125
+    126	000000FA			 dataseg
+    127	0000005E  00000000		 fhInput dd 0
+    128
+    129	00000062			 codeseg
+    130	000000FA			 proc LoadRomData c near
+    131					 arg @@FileName,@@TableHeader
+    132					 ; open	rom data file
+1   133	000000FA  C8 0000 00			 ENTERD	 00000h,0
+1   134					   call	DosOpen	c,[@@FileName],offset(fhInput),offset(ActionTaken),0,0,1,01A0h,0
+2   135	000000FE  6A 00				 PUSH	 0
+2   136	00000100  68 000001A0			 PUSH	 01A0H
+2   137	00000105  6A 01				 PUSH	 1
+2   138	00000107  6A 00				 PUSH	 0
+2   139	00000109  6A 00				 PUSH	 0
+2   140	0000010B  68 00000000r			 PUSH	 OFFSET(ACTIONTAKEN)
+2   141	00000110  68 0000005Er			 PUSH	 OFFSET(FHINPUT)
+2   142	00000115  FF 75	08			 PUSH	 [@@FILENAME]
+2   143	00000118  E8 00000000e			 CALL	 DOSOPEN
+2   144	0000011D  83 C4	20			 ADD	 ESP,00020h
+    145	00000120  85 C0			   test	eax,eax	; return code
+    146	00000122  75 31			   jnz EndLoadData ; error
+    147					 ; read	rom data file
+    148	00000124  8B 75	0C		   mov esi,[@@TableHeader]
+    149	00000127  0F B7	46 10		   movzx eax,[word(esi+16)] ; size
+    150	0000012B  8D 76	18		   lea esi,[esi+24] ; table data pointer
+    151					   call	DosRead	c,[fhInput],esi,eax,offset(BytesDone)
+1   152	0000012E  68 00000004r			 PUSH	 OFFSET(BYTESDONE)
+1   153	00000133  50				 PUSH	 EAX
+1   154	00000134  56				 PUSH	 ESI
+1   155	00000135  FF 35	0000005Er		 PUSH	 [FHINPUT]
+1   156	0000013B  E8 00000000e			 CALL	 DOSREAD
+1   157	00000140  83 C4	10			 ADD	 ESP,00010h
+    158					 ; close rom data file
+    159	00000143  8B D8			   mov ebx,eax ; return	code
+    160					   call	DosClose c,[fhInput]
+1   161	00000145  FF 35	0000005Er		 PUSH	 [FHINPUT]
+1   162	0000014B  E8 00000000e			 CALL	 DOSCLOSE
+1   163	00000150  83 C4	04			 ADD	 ESP,00004h
+    164	00000153  8B C3			   mov eax,ebx ; return	code
+    165	00000155			 label EndLoadData near
+1   166	00000155  C9				 LEAVED
+1   167	00000156  C3				 RET	 00000h
+    168	00000157			 endp LoadRomData
+    169
+    170
+    171	00000157			 dataseg
+Turbo Assembler	 Version 4.1	    27-03-16 10:37:24	    Page 4
+vio593ec.asm
+
+
+
+    172		  =FLAT:0062		 sysStart=$
+    173					 include 'vio593ec.inc'
+1   174	00000062  00000054		 h0 dd cp437cga-h0
+1   175	00000066  0008 000A		   dw 8,(vendor-$)/4 ; total number of tables
+1   176	0000006A  00000054 0000086C   +	   dd cp437cga-h0,cp437ega-h0,cp437ego-h0,cp437vga-h0,cp437vgo-h0 ; 5 tables
+    177		  00001684 000016AB   +
+    178		  000026C3
+1   179	0000007E  000026EC 00002F04   +	   dd cp850cga-h0,cp850ega-h0,cp850ego-h0,cp850vga-h0,cp850vgo-h0 ; 5 tables
+    180		  00003D1C 00003D43   +
+    181		  00004D5B
+1   182	00000092  40 23	57 2E 4D 2E 42+	 vendor	db '@#W.M.Brul:0.20160327#@vio593ec.dcp',0
+    183		  72 75	6C 3A 30 2E 32+
+    184		  30 31	36 30 33 32 37+
+    185		  23 40	76 69 6F 35 39+
+    186		  33 65	63 2E 64 63 70+
+    187		  00
+1   188
+1   189					 ; code	page 437 - font	8*08 cga
+1   190	000000B6  0818 0018 01B5 0000 +	 cp437cga dw 24+256*08,24,437,0,0,8+256*08,0,24,256*08,256,0,255
+    191		  0000 0808 0000 0018 +
+    192		  0800 0100 0000 00FF
+1   193	000000CE  0800*(??)		   db 256*08 dup(?) ; cp437cga.rom
+1   194
+1   195					 ; code	page 437 - font	8*14 ega
+1   196	000008CE  0E18 0018 01B5 0000 +	 cp437ega dw 24+256*14,24,437,0,0,8+256*14,0,24,256*14,256,0,255
+    197		  0000 0E08 0000 0018 +
+    198		  0E00 0100 0000 00FF
+1   199	000008E6  0E00*(??)		   db 256*14 dup(?) ; cp437ega.rom
+1   200
+1   201					 ; code	page 437 - font	9*14 ego
+1   202	000016E6  0027 0018 01B5 0000 +	 cp437ego dw 24+1*15,24,437,0,3,9+256*14,8+256*14,24,1*15,1,0,255
+    203		  0003 0E09 0E08 0018 +
+    204		  000F 0001 0000 00FF
+1   205	000016FE  FF 0E*(00)		   db 255,14 dup(0) ; overlay highest code point
+1   206
+1   207					 ; code	page 437 - font	8*16 vga
+1   208	0000170D  1018 0018 01B5 0000 +	 cp437vga dw 24+256*16,24,437,0,0,8+256*16,0,24,256*16,256,0,255
+    209		  0000 1008 0000 0018 +
+    210		  1000 0100 0000 00FF
+1   211	00001725  1000*(??)		   db 256*16 dup(?) ; cp437ega.rom
+1   212
+1   213					 ; code	page 437 - font	9*16 vgo
+1   214	00002725  0029 0018 01B5 0000 +	 cp437vgo dw 24+1*17,24,437,0,3,9+256*16,8+256*16,24,1*17,1,0,255
+    215		  0003 1009 1008 0018 +
+    216		  0011 0001 0000 00FF
+1   217	0000273D  FF 10*(00)		   db 255,16 dup(0) ; overlay highest code point
+1   218
+1   219					 ; code	page 850 - font	8*08 cga
+1   220	0000274E  0818 0018 0352 0000 +	 cp850cga dw 24+256*08,24,850,0,0,8+256*08,0,24,256*08,256,0,255
+    221		  0000 0808 0000 0018 +
+    222		  0800 0100 0000 00FF
+1   223	00002766  0800*(??)		   db 256*08 dup(?) ; cp850cga.rom
+1   224
+1   225					 ; code	page 850 - font	8*14 ega
+1   226	00002F66  0E18 0018 0352 0000 +	 cp850ega dw 24+256*14,24,850,0,0,8+256*14,0,24,256*14,256,0,255
+    227		  0000 0E08 0000 0018 +
+    228		  0E00 0100 0000 00FF
+Turbo Assembler	 Version 4.1	    27-03-16 10:37:24	    Page 5
+vio593ec.asm
+
+
+
+1   229	00002F7E  0E00*(??)		   db 256*14 dup(?) ; cp850ega.rom
+1   230
+1   231					 ; code	page 850 - font	9*14 ego
+1   232	00003D7E  0027 0018 0352 0000 +	 cp850ego dw 24+1*15,24,850,0,3,9+256*14,8+256*14,24,1*15,1,0,255
+    233		  0003 0E09 0E08 0018 +
+    234		  000F 0001 0000 00FF
+1   235	00003D96  FF 0E*(00)		   db 255,14 dup(0) ; overlay highest code point
+1   236
+1   237					 ; code	page 850 - font	8*16 vga
+1   238	00003DA5  1018 0018 0352 0000 +	 cp850vga dw 24+256*16,24,850,0,0,8+256*16,0,24,256*16,256,0,255
+    239		  0000 1008 0000 0018 +
+    240		  1000 0100 0000 00FF
+1   241	00003DBD  1000*(??)		   db 256*16 dup(?) ; cp850ega.rom
+1   242
+1   243					 ; code	page 850 - font	9*16 vgo
+1   244	00004DBD  0029 0018 0352 0000 +	 cp850vgo dw 24+1*17,24,850,0,3,9+256*16,8+256*16,24,1*17,1,0,255
+    245		  0003 1009 1008 0018 +
+    246		  0011 0001 0000 00FF
+1   247	00004DD5  FF 10*(00)		   db 255,16 dup(0) ; overlay highest code point
+1   248
+    249		  =4D84			 sysTotal=$-sysStart
+    250
+    251					 end MainRoutine
+Turbo Assembler	 Version 4.1	    27-03-16 10:37:24	    Page 6
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "27-03-16"
+??FILENAME			  Text	 "vio593ec"
+??TIME				  Text	 "10:37:24"
+??VERSION			  Number 0401
+@32BIT				  Text	 1
+@@ARG				  Number [FLAT:EBP+0014]
+@@ENV				  Number [FLAT:EBP+0010]
+@@FILENAME			  Number [FLAT:EBP+0008]
+@@MOD				  Number [FLAT:EBP+0008]
+@@NUL				  Number [FLAT:EBP+000C]
+@@TABLEHEADER			  Number [FLAT:EBP+000C]
+@CODE				  Text	 FLAT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F8FH
+@CURSEG				  Text	 _DATA
+@DATA				  Text	 FLAT
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 VIO593EC
+@INTERFACE			  Text	 00H
+@MODEL				  Text	 1
+@STACK				  Text	 FLAT
+@WORDSIZE			  Text	 4
+ACTIONTAKEN			  Dword	 FLAT:0000
+BYTESDONE			  Dword	 FLAT:0004
+CP437CGA			  Word	 FLAT:00B6
+CP437EGA			  Word	 FLAT:08CE
+CP437EGO			  Word	 FLAT:16E6
+CP437VGA			  Word	 FLAT:170D
+CP437VGO			  Word	 FLAT:2725
+CP850CGA			  Word	 FLAT:274E
+CP850EGA			  Word	 FLAT:2F66
+CP850EGO			  Word	 FLAT:3D7E
+CP850VGA			  Word	 FLAT:3DA5
+CP850VGO			  Word	 FLAT:4DBD
+DOSCLOSE			  Near	 ----:---- Extern
+DOSEXIT				  Near	 ----:---- Extern
+DOSOPEN				  Near	 ----:---- Extern
+DOSREAD				  Near	 ----:---- Extern
+DOSWRITE			  Near	 ----:---- Extern
+ENDLOADDATA			  Near	 FLAT:0155
+FHINPUT				  Dword	 FLAT:005E
+FHOUTPUT			  Dword	 FLAT:005A
+H0				  Dword	 FLAT:0062
+LOADROMDATA			  Near	 FLAT:00FA
+MAINROUTINE			  Near	 FLAT:0000
+REPORTRESULT			  Near	 FLAT:00EF
+SYSSTART			  Number FLAT:0062
+SYSTOTAL			  Number 4D84
+SZINPUT1			  Byte	 FLAT:0000
+SZINPUT2			  Byte	 FLAT:000D
+SZINPUT3			  Byte	 FLAT:001A
+SZINPUT4			  Byte	 FLAT:0027
+SZINPUT5			  Byte	 FLAT:0034
+SZINPUT6			  Byte	 FLAT:0041
+Turbo Assembler	 Version 4.1	    27-03-16 10:37:24	    Page 7
+Symbol Table
+
+
+
+SZOUTPUT			  Byte	 FLAT:004E
+VENDOR				  Byte	 FLAT:0092
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  STACK				  32  2000 Para	  Stack	  STACK
+  _BSS				  32  0008 Dword  Public  BSS
+  _DATA				  32  4DE6 Dword  Public  DATA
+FLAT				  Group
+_TEXT				  32  0157 Dword  Public  CODE
+
