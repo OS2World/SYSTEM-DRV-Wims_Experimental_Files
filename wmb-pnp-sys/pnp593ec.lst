@@ -1,0 +1,72 @@
+Turbo Assembler	 Version 4.1	    31-03-16 10:04:17	    Page 1
+pnp593ec.asm
+
+
+
+      1					 .386p
+      2	    0000			 model use16 small
+      3					 ideal
+      4
+      5	    0000			 dataseg
+      6					 ; device driver header
+      7	    0000  FFFFFFFF		 hdrlnk	dd 0FFFFFFFFh
+      8	    0004  8080			 hdratr	dw 8080h
+      9	    0006  0000r			 hdrstr	dw offset(strategy)
+     10	    0008  0000			 hdridc	dw 0
+     11	    000A  24 24	53 54 55 42 24+	 hdrnam	db "$$STUB$$"
+     12		  24
+     13	    0012  08*(00)		 hdrres	db 8 dup(0)
+     14
+     15	    001A			 codeseg
+     16	    0000			 proc strategy far
+     17					 ; set init failure status code
+     18	    0000  B8 8115		   mov ax,8115h	; error/done/quiet
+     19	    0003  26: 89 47 03		   mov [es:bx+3],ax ; status code
+     20					 ; prepare unload device driver
+     21	    0007  2B C0			   sub ax,ax ; ensure zeroes
+     22	    0009  26: 88 47 0D		   mov [es:bx+13],al ; data byte
+     23	    000D  26: 89 47 0E		   mov [es:bx+14],ax ; code size
+     24	    0011  26: 89 47 10		   mov [es:bx+16],ax ; data size
+     25					 ; return hardware absent
+     26	    0015  40			   inc ax ; return code
+     27	    0016  CB			   ret ; return
+     28	    0017			 endp strategy
+     29					 end
+Turbo Assembler	 Version 4.1	    31-03-16 10:04:17	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "31-03-16"
+??FILENAME			  Text	 "pnp593ec"
+??TIME				  Text	 "10:04:17"
+??VERSION			  Number 0401
+@32BIT				  Text	 0
+@CODE				  Text	 _TEXT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F8FH
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 DGROUP
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 PNP593EC
+@INTERFACE			  Text	 00H
+@MODEL				  Text	 2
+@STACK				  Text	 DGROUP
+@WORDSIZE			  Text	 2
+HDRATR				  Word	 DGROUP:0004
+HDRIDC				  Word	 DGROUP:0008
+HDRLNK				  Dword	 DGROUP:0000
+HDRNAM				  Byte	 DGROUP:000A
+HDRRES				  Byte	 DGROUP:0012
+HDRSTR				  Word	 DGROUP:0006
+STRATEGY			  Far	 _TEXT:0000
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  16  001A Word	  Public  DATA
+_TEXT				  16  0017 Word	  Public  CODE
+

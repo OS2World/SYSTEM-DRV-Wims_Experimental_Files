@@ -1,0 +1,5 @@
+library nopnp
+description '@#W.M.Brul:0.20160331#@STUB.SYS'
+protmode
+segments '_DATA' class 'DATA'
+segments '_TEXT' class 'CODE'
