@@ -1,0 +1,185 @@
+Turbo Assembler	 Version 4.1	    23-04-16 18:49:49	    Page 1
+tst593ec.asm
+
+
+
+      1					 .386p
+      2	    0000			 model use16 small
+      3					 ideal
+      4
+      5	    0000			 dataseg
+      6					 ; device driver header
+      7	    0000  FFFFFFFF		 hdrlnk	dd 0FFFFFFFFh
+      8	    0004  8080			 hdratr	dw 8080h
+      9	    0006  0057r			 hdrstr	dw offset(strategy)
+     10	    0008  0000			 hdridc	dw 0
+     11	    000A  54 45	53 54 43 46 47+	 hdrnam	db "TESTCFG$"
+     12		  24
+     13	    0012  08*(00)		 hdrres	db 8 dup(0)
+     14
+     15	    001A			 dataseg
+     16					 ; device helper
+     17	    001A  00000000		 devhlp	dd 0
+     18
+     19	    001E			 codeseg
+     20	    0000			 proc ObtainBios c near
+     21					 uses bx,ds,es ; workers
+     22					 ; check parm buffer size
+1    23	    0000  53				 PUSH	 BX
+1    24	    0001  1E				 PUSH	 DS
+1    25	    0002  06				 PUSH	 ES
+1    26	    0003  26: 83 7F 19 0A	   cmp [word(es:bx+25)],10
+     27	    0008  72 49			   jb EndObtain	; failure
+     28					 ; access parameter buffer
+     29	    000A  26: 0F B4 77 0F	   lfs si,[dword(es:bx+15)]
+     30					 ; obtain copy data length
+     31	    000F  64: 8B 4C 08		   mov cx,[word(fs:si+8)]
+     32					 ; check data buffer size
+     33	    0013  26: 39 4F 1B		   cmp [word(es:bx+27)],cx
+     34	    0017  73 08			   jnb EndFixLength ; ok
+     35	    0019  26: 8B 4F 1B		   mov cx,[word(es:bx+27)]
+     36	    001D  64: 89 4C 08		   mov [word(fs:si+8)],cx
+     37	    0021			 label EndFixLength near
+     38					 ; address rom data target
+     39	    0021  26: C4 7F 13		   les di,[dword(es:bx+19)]
+     40					 ; address rom data source
+     41	    0025  64: 8B 44 06		   mov ax,[word(fs:si+6)]
+     42	    0029  64: 8B 5C 04		   mov bx,[word(fs:si+4)]
+     43					 ; check physical address
+     44	    002D  3D 000C		   cmp ax,0Ch ;	minimum
+     45	    0030  72 21			   jb EndObtain	; failure
+     46	    0032  3D 000F		   cmp ax,0Fh ;	maximum
+     47	    0035  77 1C			   ja EndObtain	; failure
+     48					 ; respect 1MB boundary
+     49	    0037  75 08			   jne ProperLength
+     50	    0039  8B D3			   mov dx,bx ; offset
+     51	    003B  03 D1			   add dx,cx ; length
+     52	    003D  73 02			   jnc ProperLength
+     53	    003F  1B CA			   sbb cx,dx ; adjust
+     54	    0041			 label ProperLength near
+     55	    0041  BA 0015		   mov dx,0015h	; phystovirt
+     56	    0044  FF 1E	001Ar		   call	[devhlp] ; helper
+     57	    0048  B8 810C		   mov ax,810Ch	; error/done/general
+Turbo Assembler	 Version 4.1	    23-04-16 18:49:49	    Page 2
+tst593ec.asm
+
+
+
+     58	    004B  72 06			   jc EndObtain	; failure
+     59	    004D  FC			   cld ; increment indexes
+     60	    004E  F3> A4		   rep movsb ; copy rom	data
+     61					 ; set success status code
+     62	    0050  B8 0100		   mov ax,0100h	; ok/done
+     63	    0053			 label EndObtain near
+1    64	    0053  07				 POP	 ES
+1    65	    0054  1F				 POP	 DS
+1    66	    0055  5B				 POP	 BX
+1    67	    0056  C3				 RET	 00000h
+     68	    0057			 endp ObtainBios
+     69
+     70	    0057			 codeseg
+     71	    0057			 proc strategy far
+     72					 ; set parm failure status code
+     73	    0057  B8 8113		   mov ax,8113h	; error/done/parm
+     74					 ; obtain driver request code
+     75	    005A  26: 8A 4F 02		   mov cl,[es:bx+02] ; request
+     76					 ; handle dosdevioctl request
+     77	    005E  80 F9	10		   cmp cl,10h ;	dosdevioctl
+     78	    0061  75 0F			   jne NotDosDevIoctl ;	other
+     79					 ; switch function/category
+     80	    0063  26: 8B 57 0D		   mov dx,[word(es:bx+13)]
+     81	    0067  81 FA	4080		   cmp dx,4080h
+     82	    006B  75 0A			   jne EndStrategy
+     83	    006D			 label DoMemory	near
+     84	    006D  E8 FF90		   call	ObtainBios
+     85	    0070  EB 05			   jmp EndStrategy
+     86	    0072			 label NotDosDevIoctl near
+     87					 ; handle initialization
+     88	    0072  80 F9	00		   cmp cl,00h ;	initialize
+     89	    0075  74 05			   je Initialize ; once
+     90	    0077			 label EndStrategy near
+     91					 ; return status code
+     92	    0077  26: 89 47 03		   mov [es:bx+03],ax
+     93	    007B  CB			   ret ; return
+     94	    007C			 endp strategy
+     95
+     96	    007C			 codeseg
+     97					 ; end of code segment
+     98	    007C			 label EndCode near
+     99
+    100	    007C			 dataseg
+    101					 ; end of data segment
+    102	    001E			 label EndData byte
+    103
+    104	    001E			 codeseg
+    105	    007C			 proc Initialize near
+    106					 ; save	devhlp entry point
+    107	    007C  26: 8B 47 0E		   mov ax,[es:bx+14]
+    108	    0080  A3 001Ar		   mov [word(devhlp+00)],ax
+    109	    0083  26: 8B 47 10		   mov ax,[es:bx+16]
+    110	    0087  A3 001Cr		   mov [word(devhlp+02)],ax
+    111					 ; reduce module size
+    112	    008A  B8 007Cr		   mov ax,offset(EndCode)
+    113	    008D  26: 89 47 0E		   mov [es:bx+14],ax
+    114	    0091  B8 001Er		   mov ax,offset(EndData)
+Turbo Assembler	 Version 4.1	    23-04-16 18:49:49	    Page 3
+tst593ec.asm
+
+
+
+    115	    0094  26: 89 47 10		   mov [es:bx+16],ax
+    116					 ; set success status code
+    117	    0098  B8 0100		   mov ax,0100h	; ok/done
+    118	    009B  EB DA			   jmp EndStrategy
+    119	    009D			 endp Initialize
+    120
+    121					 end
+Turbo Assembler	 Version 4.1	    23-04-16 18:49:49	    Page 4
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "23-04-16"
+??FILENAME			  Text	 "tst593ec"
+??TIME				  Text	 "18:49:49"
+??VERSION			  Number 0401
+@32BIT				  Text	 0
+@CODE				  Text	 _TEXT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0F8FH
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 DGROUP
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 TST593EC
+@INTERFACE			  Text	 00H
+@MODEL				  Text	 2
+@STACK				  Text	 DGROUP
+@WORDSIZE			  Text	 2
+DEVHLP				  Dword	 DGROUP:001A
+DOMEMORY			  Near	 _TEXT:006D
+ENDCODE				  Near	 _TEXT:007C
+ENDDATA				  Byte	 DGROUP:001E
+ENDFIXLENGTH			  Near	 _TEXT:0021
+ENDOBTAIN			  Near	 _TEXT:0053
+ENDSTRATEGY			  Near	 _TEXT:0077
+HDRATR				  Word	 DGROUP:0004
+HDRIDC				  Word	 DGROUP:0008
+HDRLNK				  Dword	 DGROUP:0000
+HDRNAM				  Byte	 DGROUP:000A
+HDRRES				  Byte	 DGROUP:0012
+HDRSTR				  Word	 DGROUP:0006
+INITIALIZE			  Near	 _TEXT:007C
+NOTDOSDEVIOCTL			  Near	 _TEXT:0072
+OBTAINBIOS			  Near	 _TEXT:0000
+PROPERLENGTH			  Near	 _TEXT:0041
+STRATEGY			  Far	 _TEXT:0057
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  16  001E Word	  Public  DATA
+_TEXT				  16  009D Word	  Public  CODE
+

@@ -1,0 +1,5 @@
+library testcfg
+description '@#W.M.Brul:0.20160423#@TESTCFG.SYS'
+protmode
+segments '_DATA' class 'DATA'
+segments '_TEXT' class 'CODE'
